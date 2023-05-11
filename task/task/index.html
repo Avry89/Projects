@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Table</title>
+    <link rel="shortcut icon" type="image/jpg" href="images/favicon.png"/>
+    <link rel="stylesheet" href="libs/css/main.css">
+</head>
+
+<body>
+    
+
+    <section class="wrapper-main">
+        
+        <table>
+            <tr>
+                <th>API Name</th>
+                <th>API Description</th>
+                <th>Submit</th>
+            </tr>
+
+            <tr>
+                <td>1.Timezone</td>
+                <td style="height:100px" ;>
+                    <p id="description"></p>Time zone at the given longitude and latitude:</p>
+                    <label for="longitude">Enter the Longitude: </label>
+                    <input type="text" id="long" name="longitude">
+                    <label for="latitude">Enter the Latitude: </label>
+                    <input type="text" id="lat" name="latitude">
+                </td>
+                <td><button id="btnRun">Submit </button></td>
+            </tr>
+            <tr>
+                <td>
+                    Result of API Call
+                </td>
+                <td colspan="2" style="height: 100px;">
+                    <p>Sunrise:</p>
+                    <p id="sunrise"></p>
+                    <p>Sunset:</p>
+                    <p id="sunset"></p>
+                    <p>Country:</p>
+                    <p id="country"></p>
+                    <p>Timezone:</p>
+                    <p id="timeZone"></p>
+                    <p>Time now:</p>
+                    <p id="timeNow"></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>2. Country info</td>
+                <td>
+                    <p id="tabledescriptions">Information about the country.</p><select id="selCountry">
+                        <option value="GB">Great Britain</option>
+                        <option value="FR">France</option>
+                        <option value="DE">Germany</option>
+                        <option value="US">USA</option>
+
+                    </select>
+
+                    <select id="selLanguage">
+                        <option value="en">English</option>
+                        <option value="fr">Francais</option>
+                        <option value="de">Deutsche</option>
+                    </select>
+                </td>
+
+                <td><button id="btnRun2">Submit </button></td>
+
+            <tr>
+
+            <tr>
+                <td style="height: 100px">
+                    Result of API Call
+                </td>
+                <td colspan="2" id="results">
+                   <p>Continent:</p>
+                    <p id="txtContinent"></p>
+                    <p>Capital:</p>
+                    <p id="txtCapital"></p>
+                    <p>Languages:</p>
+                    <p id="txtLanguages"></p>
+                    <p>Population:</p>
+                    <p id="txtPopulation"></p>
+                    <p>Area (km<sup>2</sup>):</p>
+                    <p id="txtArea"></p>
+
+
+
+                </td>
+
+
+            </tr>
+
+              
+        <tr>
+           
+            <td>3.Ocean </td>
+
+            <td>
+                <p id="tabledescriptions">Returns the ocean or sea at the given longitude and latitude.</p>
+
+
+                <label for="longitude">Enter the Longitude: </label>
+                <input type="text" id="oceanLong" name="longitude">
+                <label for="latitude">Enter the Latitude: </label>
+                <input type="text" id="oceanLat" name="latitude">
+            </td>
+            <td><button id="btnRun3">Submit </button></td>
+        </tr>
+
+        <tr>
+            <td>
+                <p id="tabledescriptions">Result of API Call</p>
+            </td>
+            <td colspan="2">
+                <p>Distance:</p>
+                <p id="distance"></p>
+                <p>Geoname Id:</p>
+                <p id="geonameId"></p>
+                <p>Name:</p>
+                <p id="name"></p>
+                
+            </td>
+        </tr>
+        </table>
+    </section>
+    
+    <script type="application/javascript" src="libs/js/jquery-3.6.4.js"></script>
+    <script type="application/javascript" src="libs/js/script.js"></script>
+</body>
+
+</html>
