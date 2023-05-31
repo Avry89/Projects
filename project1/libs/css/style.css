@@ -33,8 +33,106 @@ body {
     left: 25% !important;
 }
 
+/* Marker cluster styling*/
+
+.my-cluster-icon {
+  background-color: #ff7800;
+  border: solid 1px white;
+  border-radius: 50%;
+  color: white;
+  line-height: 40px;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+}
+.my-cluster-icon span {
+  line-height: 40px;
+
+}
+
+
+/* earthquake icon styling*/
+
+.my-extra-class {
+  /* add a box shadow for a "glowing" effect */
+  box-shadow: 0 0 10px #ff0000; /* adjust color and size as needed */
+  
+  /* add a transition for a smooth "hover" effect */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* scale the icon up when hovered over */
+.my-extra-class:hover {
+  transform: scale(1.1);
+}
+
+
+/* map icon styling */
+
+
+
 
 /*  Modal styling */
+
+/* wiki button*/
+
+#wikipediaModal .modal-content {
+  background-color: #f5e7de;
+  border-radius: 15px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#wikipediaModal .modal-header {
+  background-color: #f4a261;
+  color: #ffffff;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+#wikipediaModal .modal-title {
+  font-weight: bold;
+}
+
+#wikipediaModal .modal-body {
+  color: #6d4c41;
+  line-height: 1.5;
+  padding: 15px;
+}
+
+#wikipediaModal .modal-body p {
+  margin-bottom: 1rem;
+}
+
+#wikipediaModal .modal-body span {
+  color: #e76f51;
+  font-weight: bold;
+}
+
+#wikipediaModal .modal-footer {
+  background-color: #f4a261;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+#wikipediaModal .modal-footer .btn {
+  background-color: #2a9d8f;
+  color: #ffffff;
+}
+
+#wikipediaModal .modal-footer .btn:hover {
+  background-color: #1c6f5a;
+}
+  
+#wikipediaModal .modal-footer .btn {
+  background-color: #2a9d8f;
+  color: #ffffff;
+}
+
+#wikipediaModal .modal-footer .btn:hover {
+  background-color: #1c6f5a;
+}
+
+
 
 .modal-content,
 #currencyModal .modal-content {
@@ -235,6 +333,77 @@ body {
     border-bottom-right-radius: 15px;
   }
   
+
+/* Carousel styling and image aspect ratio*/
+
+.carousel-item img {
+  max-width: 700px;  /* or any other size you want */
+  max-height: 500px;  /* or any other size you want */
+  width: auto;
+  height: auto;
+  margin: auto;  /* this will center the image if it's smaller than the given dimensions */
+}
+
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    color: #f4a261;  /* Set the desired color for the buttons */
+}
+
+
+/* Pictures modal*/
+
+#picturesModal .modal-content {
+  background-color: #f5e7de;
+  border-radius: 15px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#picturesModal .modal-header {
+  background-color: #f4a261;
+  color: #ffffff;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+#picturesModal .modal-title {
+  font-weight: bold;
+}
+
+#picturesModal .modal-body {
+  color: #6d4c41;
+  line-height: 1.5;
+  padding: 15px;
+}
+
+#picturesModal .modal-body p {
+  margin-bottom: 1rem;
+}
+
+#picturesModal .modal-body span {
+  color: #e76f51;
+  font-weight: bold;
+}
+
+#picturesModal .modal-footer {
+  background-color: #f4a261;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+#picturesModal .modal-footer .btn {
+  background-color: #2a9d8f;
+  color: #ffffff;
+}
+
+#picturesModal .modal-footer .btn:hover {
+  background-color: #1c6f5a;
+}
 
 
 

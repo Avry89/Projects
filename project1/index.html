@@ -19,7 +19,10 @@
 
     <link rel="stylesheet" href="libs/assets/fontawesome/css/all.min.css" />
 
-      <link rel="stylesheet" href="libs/assets/leaflet/leaflet.css">
+    <link rel="stylesheet" href="libs/assets/leaflet/leaflet.css">
+
+    <link rel="stylesheet" href="libs/js/Leaflet.Markercluster/dist/MarkerCluster.css">
+
 
 </head>
 
@@ -47,17 +50,18 @@
 
     <!--Public holiday-->
 
-    <div class="modal fade" id="holidayModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="holidayModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Public Holidays</h5>
-                    
-                        
-                    
+
+
+
                 </div>
                 <div class="modal-body">
-                  
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -69,7 +73,7 @@
 
     <!--Weather-->
 
-    <div class="modal fade" tabindex="-1" role="dialog" id="weatherModal" >
+    <div class="modal fade" tabindex="-1" role="dialog" id="weatherModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -122,49 +126,114 @@
 
     <div id="currencyModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Currency Conversion</h5>
-              
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Currency Conversion</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="baseCurrencyCode"></p>
+                    <p id="baseCurrencyName"></p>
+                    <p id="convertedCurrencyCode"></p>
+                    <p id="convertedCurrencyName"></p>
+                    <p id="conversionRate"></p>
+                    <hr>
+                    <label for="amountToConvert" id="amountToConvertLabel">Amount in country currency:</label>
+                    <input type="number" id="amountToConvert" min="0" step="0.01" value="0">
+                    <button id="convertBtn" type="button" class="btn btn-primary">Convert</button>
+                    <hr>
+                    <p id="convertedAmount"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
-            <div class="modal-body">
-              <p id="baseCurrencyCode"></p>
-              <p id="baseCurrencyName"></p>
-              <p id="convertedCurrencyCode"></p>
-              <p id="convertedCurrencyName"></p>
-              <p id="conversionRate"></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
+
+
+    <!--Wikipedia -->
+
+    <div id="wikipediaModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Country Information</h5>
+                </div>
+                <div class="modal-body">
+                    <h5 id="wikiTitle"></h5>
+                    <p id="wikiExtract"></p>
+                    <a id="wikiLink" href="#" target="_blank">Read More on Wikipedia</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+      <!--Pictures-->
+
       
 
-        
-        
+<div class="modal fade" id="picturesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Country Images</h5>
+                
+            </div>
+            <div class="modal-body">
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-         <!-- Script files  -->
+
+    
 
 
-        <script src="libs/assets/leaflet/leaflet.js"></script>
 
-        <script src="libs/js/easy-button.js"></script>
 
-        <script src="libs/js/Leaflet.ExtraMarkers/dist/js/leaflet.extra-markers.js"></script>
 
-        <script src="libs/js/Leaflet.Markercluster/dist/leaflet.markercluster-src.js"></script>
 
-        <script src="libs/js/leaflet.featuregroup.subgroup.js"></script>
 
-        <script src="libs/js/L.Control.Locate.min.js" charset="utf-8"></script>
+    <!-- Script files  -->
 
-        <script src="libs/js/jquery-3.6.4.js"></script>
 
-        <script src="libs/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="libs/assets/leaflet/leaflet.js"></script>
 
-        <script src="libs/js/script.min.js"></script>
+    <script src="libs/js/easy-button.js"></script>
+
+    <script src="libs/js/Leaflet.ExtraMarkers/dist/js/leaflet.extra-markers.js"></script>
+
+    <script src="libs/js/Leaflet.Markercluster/dist/leaflet.markercluster-src.js"></script>
+
+    <script src="libs/js/leaflet.featuregroup.subgroup.js"></script>
+
+    <script src="libs/js/L.Control.Locate.min.js" charset="utf-8"></script>
+
+    <script src="libs/js/jquery-3.6.4.js"></script>
+
+    <script src="libs/assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="libs/js/script.js"></script>
 
 
 </body>

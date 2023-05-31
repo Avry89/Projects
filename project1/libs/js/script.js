@@ -38,18 +38,78 @@ L.control.scale().addTo(myMap);
 
 // Buttons
 
-let btn1 = L.easyButton("fa-info-circle", function (a, e) {
-    $("#countryModal").modal("show")
-}).addTo(myMap),
-    btn2 = L.easyButton("fa fa-usd", function (a, e) {
-        $("#currencyModal").modal("show"), currencyExchange()
-    }).addTo(myMap),
-    btn3 = L.easyButton("fa-cloud", function (a, e) {
-        $("#weatherModal").modal("show"), weatherForecast()
-    }).addTo(myMap),
-    btn4 = L.easyButton("fas fa-gifts", function (a, e) {
-        $("#holidayModal").modal("show"), publicHolidays()
-    }).addTo(myMap);
+let btn1 = L.easyButton({
+    states: [{
+      stateName: 'show-country',
+      icon: 'fa-info-circle',
+      title: 'Country Info',
+      onClick: function (control) {
+        $("#countryModal").modal("show");
+      }
+    }]
+  }).addTo(myMap);
+  
+  let btn2 = L.easyButton({
+    states: [{
+      stateName: 'show-currency',
+      icon: 'fa-usd',
+      title: 'Currency Exchange',
+      onClick: function (control) {
+        $("#currencyModal").modal("show");
+        currencyExchange();
+      }
+    }]
+  }).addTo(myMap);
+  
+  let btn3 = L.easyButton({
+    states: [{
+      stateName: 'show-weather',
+      icon: 'fa-cloud',
+      title: 'Weather Forecast',
+      onClick: function (control) {
+        $("#weatherModal").modal("show");
+        weatherForecast();
+      }
+    }]
+  }).addTo(myMap);
+  
+  let btn4 = L.easyButton({
+    states: [{
+      stateName: 'show-holidays',
+      icon: 'fa-gifts',
+      title: 'Public Holidays',
+      onClick: function (control) {
+        $("#holidayModal").modal("show");
+        publicHolidays();
+      }
+    }]
+  }).addTo(myMap);
+  
+  let btn5 = L.easyButton({
+    states: [{
+      stateName: 'show-wikipedia',
+      icon: '<i class="fa-brands fa-wikipedia-w"></i>',
+      title: 'Wikipedia',
+      onClick: function (control) {
+        $("#wikipediaModal").modal("show");
+        showWikipedia();
+      }
+    }]
+  }).addTo(myMap);
+  
+  let btn6 = L.easyButton({
+    states: [{
+      stateName: 'show-pictures',
+      icon: 'fa-image',
+      title: 'Country Pictures',
+      onClick: function (control) {
+        $("#picturesModal").modal("show");
+        displayCountryImages();
+      }
+    }]
+  }).addTo(myMap);
+  
+
 
 
 // Populating select with countries
@@ -189,8 +249,11 @@ $('#selectCountry').on('change', () => {
 
 // Modals
 
-function countryInformation() {
+function formatNumberWithCommas(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
+function countryInformation() {
     let countryIso = $('#selectCountry').val();
 
     $.ajax({
@@ -201,23 +264,17 @@ function countryInformation() {
             countryCode: countryIso
         },
         success: function (result) {
-
             $('#continent').text(result.data[0].continent);
             $('#country').text(result.data[0].countryName);
             $('#capital').text(result.data[0].capital);
-            $('#population').text(result.data[0].population);
-            $('#area').text(result.data[0].areaInSqKm);
+            $('#population').text(formatNumberWithCommas(result.data[0].population));
+            $('#area').text(formatNumberWithCommas(result.data[0].areaInSqKm));
             $('#currency').text(result.data[0].currencyCode);
-
-
-
         },
         error: function (err) {
             console.log(err);
         }
     });
-
-
 }
 
 $('#selectCountry').on('change', () => countryInformation());
@@ -235,32 +292,45 @@ function currencyExchange() {
             countryCode: countryCode
         },
         success: function (response) {
-
-            var baseCurrencyCode = response.data.base_currency_code;
-            var baseCurrencyName = response.data.base_currency_name;
-
-            var convertedCurrencyCode = Object.keys(response.data.rates)[0];
-            var convertedCurrencyName = response.data.rates[convertedCurrencyCode].currency_name;
-            var conversionRate = response.data.rates[convertedCurrencyCode].rate;
-
+            let baseCurrencyCode = response.data.base_currency_code;
+            let baseCurrencyName = response.data.base_currency_name;
+            let convertedCurrencyCode = Object.keys(response.data.rates)[0];
+            let convertedCurrencyName = response.data.rates[convertedCurrencyCode].currency_name;
+            let conversionRate = response.data.rates[convertedCurrencyCode].rate;
 
             $("#baseCurrencyCode").text("Base Currency Code: " + baseCurrencyCode);
             $("#baseCurrencyName").text("Base Currency Name: " + baseCurrencyName);
             $("#convertedCurrencyCode").text("Country Currency Code: " + convertedCurrencyCode);
             $("#convertedCurrencyName").text("Country Currency Name: " + convertedCurrencyName);
             $("#conversionRate").text("Conversion Rate: " + conversionRate);
+            $("#amountToConvertLabel").text("Amount in " + convertedCurrencyName + ":");
 
+            // Clears the 0 when user clicks on input field
+            $("#amountToConvert").focus(function () {
+                $(this).val('');
+            });
+
+            $("#convertBtn").click(function () {
+                let amountToConvert = $("#amountToConvert").val();
+                let convertedAmount = (amountToConvert / conversionRate).toFixed(2);  // Adds only 2 digits after decimal point
+                $("#convertedAmount").text("Converted Amount: " + convertedAmount + " " + baseCurrencyName);
+            });
 
             $("#currencyModal").modal("show");
         },
-
         error: function (err) {
             console.log("Error: ", err);
         }
     });
 
 
+    // Function to clear the input field and result when you close modal so you can do another conversion without the need to refresh the page.
+    $("#currencyModal").on("hidden.bs.modal", function () {
+        $("#amountToConvert").val('0');
+        $("#convertedAmount").text('');
+    });
 }
+
 //  Weather 
 
 function weatherForecast() {
@@ -293,7 +363,6 @@ function weatherForecast() {
 
 function publicHolidays() {
     const countryCode = $("#selectCountry").val();
-
     $.ajax({
         url: "libs/php/getPublicHolidays.php",
         type: "GET",
@@ -302,33 +371,108 @@ function publicHolidays() {
             countryCode: countryCode
         },
         success: function (result) {
-            var html = '';
-            for (let i = 0; i < result.length; i++) {
-                html += '<div class="holiday">';
-                html += '<span class="date">Date: ' + result[i].date + '</span>';
-                html += '<span class="name">Name: ' + result[i].name + '</span>';
-                html += '</div>';
+            let holidays = result;
+
+            let tableHtml = '<table class="table">';
+            tableHtml += '<thead><tr><th>Date</th><th>Name</th></tr></thead>';
+            tableHtml += '<tbody>';
+
+            for (let i = 0; i < holidays.length; i++) {
+                tableHtml += '<tr>';
+                tableHtml += '<td>' + holidays[i].date + '</td>';
+                tableHtml += '<td>' + holidays[i].name + '</td>';
+                tableHtml += '</tr>';
             }
-            $('#holidayModal .modal-body').html(html);
 
+            tableHtml += '</tbody></table>';
+
+            $("#holidayModal .modal-body").html(tableHtml);
+            $("#holidayModal").modal("show");
         },
+        error: function (jqXHR, textStatus, errorThrown) {
+            let errorText = "An error occurred while fetching public holidays.";
+            if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                errorText += " " + jqXHR.responseJSON.message;
+            }
+            console.log(errorText);
+        }
+    });
+}
 
+
+
+$('#selectCountry').change(publicHolidays);
+
+// Wikipedia 
+
+function showWikipedia() {
+    const countryCode = $("#selectCountry").val();
+    $.ajax({
+        url: "libs/php/getWikipedia.php", // 
+        type: "GET",
+        dataType: "json",
+        data: {
+            countryCode: countryCode
+        },
+        success: function (response) {
+            if (response.data.wikipedia) {
+                $("#wikiTitle").text(response.data.wikipedia.title || "");
+                $("#wikiExtract").text(response.data.wikipedia.extract || "");
+                $("#wikiLink").attr("href", response.data.wikipedia.content_urls?.desktop?.page || "#");
+            }
+            $("#wikipediaModal").modal("show");
+        },
         error: function (err) {
             console.log("Error: ", err);
         }
     });
 }
 
-$('#selectCountry').change(publicHolidays);
+// Country pictures
 
-
-
-
-
+function displayCountryImages() {
+    const countryCode = $("#selectCountry").val(); 
+    $.ajax({
+        url: "libs/php/getCountryPictures.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+            countryCode: countryCode
+        },
+        success: function (result) {
+            let images = result.data.unsplash || [];
+            let imageHtml = '';
+        
+            for (let i = 0; i < images.length; i++) {
+                let activeClass = i === 0 ? 'active' : '';
+                imageHtml += '<div class="carousel-item ' + activeClass + '">';
+                imageHtml += '<img class="d-block w-100" src="' + (images[i].urls?.small || '') + '">';
+                imageHtml += '</div>';
+            }
+            
+            $('#carouselInner').html(imageHtml);
+            $('#carouselExampleIndicators').carousel();  // initialize the carousel
+            $('#picturesModal').modal('show');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+        }
+    });
+}
 
 // Earthquake and Place of interest markers
 
-let overlay = L.markerClusterGroup();
+let overlay = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+        return L.divIcon({
+            html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+            className: 'my-cluster-icon',
+            iconSize: L.point(40, 40)
+        });
+    }
+});
+
+
 let earthquake = L.featureGroup.subGroup(overlay);
 let placesOfInterest = L.featureGroup.subGroup(overlay);
 
@@ -381,11 +525,13 @@ function displayEarthquakeMarkers(countryCode) {
 
                             earthquakeIcon = L.ExtraMarkers.icon({
                                 icon: 'fas fa-globe-americas fa-2x',
-                                markerColor: 'orange',
-                                iconColor: 'black',
-                                shape: 'circle',
-                                prefix: 'fa'
+                                markerColor: 'red',
+                                iconColor: 'white',
+                                shape: 'penta',
+                                prefix: 'fa',
+                                extraClasses: 'my-extra-class'
                             });
+
 
 
                             let earthquakes = L.marker([lat, lng], { icon: earthquakeIcon });
@@ -455,12 +601,14 @@ function displayPlaceOfInterestMarkers(countryCode) {
                                 let title = result.data[i].title;
 
                                 let icon = L.ExtraMarkers.icon({
-                                    icon: 'fas fa-map-marker fa-3x',
+                                    icon: 'fas fa-map-marker-alt fa-3x',
                                     markerColor: 'blue',
-                                    iconColor: 'red',
+                                    iconColor: 'grey',
                                     shape: 'circle',
-                                    prefix: 'fa'
+                                    prefix: 'fa',
+                                    extraClasses: 'my-interest-marker-class'
                                 });
+
 
                                 let placeOfInterest = L.marker([lat, lng], { icon: icon });
 
