@@ -1,472 +1,124 @@
 body {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
-/* CSS */
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .preloader {
-    position: fixed; /* Fix the position to the viewport */
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;  /* Use flexbox */
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-    background-color: rgba(0, 0, 0, 0.5); /* You may add a background color and adjust its opacity */
-    z-index: 9999; /* Make sure the preloader stays on top */
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
 }
+
+.spinner {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  border-top-color: transparent;
+  animation: spinner 0.8s linear infinite;
+}
+
+
+
+
 
 /* map */
 
 #map {
-    height: 100vh;
-    width: 100%;
+  height: 100vh;
+  width: 100%;
 }
 
 #nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  width: 50% !important;
+  left: 25% !important;
+}
+
+
+/* Pre loader for weather modal */
+
+#pre-load {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  overflow: hidden;
+  background: #fff;
+}
+
+#pre-load:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #f2f2f2;
+    border-top: 6px solid #56829e ;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: animate-preloader 1s linear infinite;
+    animation: animate-preloader 1s linear infinite;
+}
+
+@-webkit-keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+    }
+    @keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+}
+
+
+
+/* Media queries */
+@media only screen and (max-width: 473px) {
+  #nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    width: 50% !important;
-    left: 25% !important;
-}
-
-/* Marker cluster styling*/
-
-.my-cluster-icon {
-  background-color: #ff7800;
-  border: solid 1px white;
-  border-radius: 50%;
-  color: white;
-  line-height: 40px;
-  text-align: center;
-  width: 40px;
-  height: 40px;
-}
-.my-cluster-icon span {
-  line-height: 40px;
-
-}
-
-
-/* earthquake icon styling*/
-
-.my-extra-class {
-  /* add a box shadow for a "glowing" effect */
-  box-shadow: 0 0 10px #ff0000; /* adjust color and size as needed */
-  
-  /* add a transition for a smooth "hover" effect */
-  transition: transform 0.3s ease-in-out;
-}
-
-/* scale the icon up when hovered over */
-.my-extra-class:hover {
-  transform: scale(1.1);
-}
-
-
-/* map icon styling */
-
-
-
-
-/*  Modal styling */
-
-/* wiki button*/
-
-#wikipediaModal .modal-content {
-  background-color: #f5e7de;
-  border-radius: 15px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-#wikipediaModal .modal-header {
-  background-color: #f4a261;
-  color: #ffffff;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-}
-
-#wikipediaModal .modal-title {
-  font-weight: bold;
-}
-
-#wikipediaModal .modal-body {
-  color: #6d4c41;
-  line-height: 1.5;
-  padding: 15px;
-}
-
-#wikipediaModal .modal-body p {
-  margin-bottom: 1rem;
-}
-
-#wikipediaModal .modal-body span {
-  color: #e76f51;
-  font-weight: bold;
-}
-
-#wikipediaModal .modal-footer {
-  background-color: #f4a261;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-}
-
-#wikipediaModal .modal-footer .btn {
-  background-color: #2a9d8f;
-  color: #ffffff;
-}
-
-#wikipediaModal .modal-footer .btn:hover {
-  background-color: #1c6f5a;
-}
-  
-#wikipediaModal .modal-footer .btn {
-  background-color: #2a9d8f;
-  color: #ffffff;
-}
-
-#wikipediaModal .modal-footer .btn:hover {
-  background-color: #1c6f5a;
-}
-
-
-
-.modal-content,
-#currencyModal .modal-content {
-  background-color: #f5e7de;
-  border-radius: 15px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.modal-header,
-#currencyModal .modal-header {
-  background-color: #f4a261;
-  color: #ffffff;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-}
-
-.modal-footer,
-#currencyModal .modal-footer,
-#holidayModal .modal-footer {
-  background-color: #f4a261;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-}
-
-
-
-
-.modal-content {
-    background-color: #f5e7de; 
-    border-radius: 15px; 
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1); 
-}
-
-.modal-header {
-    background-color: #f4a261; 
-    color: #ffffff; 
-    border-top-left-radius: 15px; 
-    border-top-right-radius: 15px;
-}
-
-.modal-title {
-    font-weight: bold;
-}
-
-.modal-body {
-    color: #6d4c41; 
-    line-height: 1.5; 
-    padding: 15px;
-}
-
-.modal-body p {
-    margin-bottom: 1rem; 
-}
-
-.modal-body span {
-    color: #e76f51; 
-    font-weight: bold;
-}
-
-.modal-footer {
-    background-color: #f4a261; 
-    border-bottom-left-radius: 15px; 
-    border-bottom-right-radius: 15px;
-
-}
-
-/* Currency modal styling*/
-
-#currencyModal .modal-body {
-    color: #6d4c41;
-    line-height: 1.5;
-    padding: 15px;
-    font-family: inherit;
-    font-size: inherit;
-  }
-  
-  #currencyModal .modal-body p {
-    margin-bottom: 1rem;
-  }
-  
-  #currencyModal .modal-body span {
-    color: #e76f51;
-    font-weight: bold;
-  }
-  
-
-#currencyModal .modal-content {
-    background-color: #f5e7de;
-    border-radius: 15px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  #currencyModal .modal-header {
-    background-color: #f4a261;
-    color: #ffffff;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-  
-  #currencyModal .modal-title {
-    font-weight: bold;
-  }
-  #currencyModal .modal-footer .btn {
-    background-color: #2a9d8f;
-    color: #ffffff;
-  }
-  
-  #currencyModal .modal-footer .btn:hover {
-    background-color: #1c6f5a;
-  }
-    
-  #holidayModal .modal-footer .btn {
-    background-color: #2a9d8f;
-    color: #ffffff;
-  }
-  
-  #holidayModal .modal-footer .btn:hover {
-    background-color: #1c6f5a;
-  }
-  
-
-
-/* Weather and country info modals*/
-
-#countryModal .modal-content {
-    background-color: #f5e7de;
-    border-radius: 15px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  #countryModal .modal-header {
-    background-color: #f4a261;
-    color: #ffffff;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-  
-  #countryModal .modal-title {
-    font-weight: bold;
-  }
-  
-  #countryModal .modal-body {
-    color: #6d4c41;
-    line-height: 1.5;
-    padding: 15px;
-  }
-  
-  #countryModal .modal-body p {
-    margin-bottom: 1rem;
-  }
-  
-  #countryModal .modal-body span {
-    color: #e76f51;
-    font-weight: bold;
-  }
-  
-  #countryModal .modal-footer {
-    background-color: #f4a261;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    height: 2.7rem;
   }
 
-  #weatherModal .modal-content {
-    background-color: #f5e7de;
-    border-radius: 15px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  #selectCountry {
+    width: 7.1rem;
+    font-size: 0.7rem;
   }
-  
-  #weatherModal .modal-header {
-    background-color: #f4a261;
-    color: #ffffff;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-  
-  #weatherModal .modal-title {
-    font-weight: bold;
-  }
-  
-  #weatherModal .modal-body {
-    color: #6d4c41;
-    line-height: 1.5;
-    padding: 15px;
-  }
-  
-  #weatherModal .modal-body p {
-    margin-bottom: 1rem;
-  }
-  
-  #weatherModal .modal-body span {
-    color: #e76f51;
-    font-weight: bold;
-  }
-  
-  #weatherModal .modal-footer {
-    background-color: #f4a261;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-  }
-  
 
-/* Carousel styling and image aspect ratio*/
-
-.carousel-item img {
-  max-width: 700px;  /* or any other size you want */
-  max-height: 500px;  /* or any other size you want */
-  width: auto;
-  height: auto;
-  margin: auto;  /* this will center the image if it's smaller than the given dimensions */
-}
-
-.carousel-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    color: #f4a261;  /* Set the desired color for the buttons */
-}
-
-
-/* Pictures modal*/
-
-#picturesModal .modal-content {
-  background-color: #f5e7de;
-  border-radius: 15px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-#picturesModal .modal-header {
-  background-color: #f4a261;
-  color: #ffffff;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-}
-
-#picturesModal .modal-title {
-  font-weight: bold;
-}
-
-#picturesModal .modal-body {
-  color: #6d4c41;
-  line-height: 1.5;
-  padding: 15px;
-}
-
-#picturesModal .modal-body p {
-  margin-bottom: 1rem;
-}
-
-#picturesModal .modal-body span {
-  color: #e76f51;
-  font-weight: bold;
-}
-
-#picturesModal .modal-footer {
-  background-color: #f4a261;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-}
-
-#picturesModal .modal-footer .btn {
-  background-color: #2a9d8f;
-  color: #ffffff;
-}
-
-#picturesModal .modal-footer .btn:hover {
-  background-color: #1c6f5a;
-}
-
-
-
-
-
-/* Modal buttons styling*/
-
-.btn.btn-light {
-    background-color: #2a9d8f; 
-    color: #ffffff; 
-}
-
-.btn.btn-light:hover {
-    background-color: #1c6f5a; 
-}
-
-
-/* Popup boxes styling*/
-
-
-.custom-popup .leaflet-popup-content-wrapper {
-    background: #FDD8B3;
-    color: #8B4513;
-    font-size: 1em;
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.25);
-  }
-  
-  .custom-popup .leaflet-popup-tip-container {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .custom-popup .leaflet-popup-tip {
-    background: #FDD8B3;
-  }
-  
-  .custom-popup .popup-header {
-    font-size: 1.4em;
-    text-align: center;
-  }
-  
-  .custom-popup .popup-coordinates,
-  .custom-popup .popup-magnitude,
-  .custom-popup .popup-depth {
-    font-size: 1.1em;
-    margin: 5px 0;
-  }
-  
-
-  /* Media */
-@media only screen and (max-width: 473px){
-    #nav-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 2.7rem;
-    }
-    
-    #selectCountry{
-        width: 7.1rem;
-        font-size: 0.7rem;
-    }
-    
 }

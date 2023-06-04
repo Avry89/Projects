@@ -17,11 +17,17 @@
 
     <link rel="stylesheet" href="libs/css/easy-button.css">
 
+    <link rel="stylesheet" href="libs/assets/fontawesome/css/fontawesome.css" />
+
     <link rel="stylesheet" href="libs/assets/fontawesome/css/all.min.css" />
 
     <link rel="stylesheet" href="libs/assets/leaflet/leaflet.css">
 
     <link rel="stylesheet" href="libs/js/Leaflet.Markercluster/dist/MarkerCluster.css">
+
+    <link rel="stylesheet" href="libs/js/Leaflet.Markercluster/dist/MarkerCluster.Default.css">
+
+    <link rel="stylesheet" href="libs/js/Leaflet.ExtraMarkers/dist/css/leaflet.extra-markers.min.css">
 
 
 </head>
@@ -29,7 +35,7 @@
 <body>
     <!--Preloader-->
     <div class="preloader">
-        <img src="libs/assets/Fading wheel.gif" alt="">
+        <div class="spinner"></div>
     </div>
 
 
@@ -38,7 +44,7 @@
 
 
         <div class="form-inline" id="form-container">
-            <select name="selected-country" class="btn btn-light dropdown-toggle " id="selectCountry" hidden>
+            <select name="selected-country" class="dropdown-toggle " id="selectCountry" hidden>
                 <option value="none" selected disabled hidden>Select country</option>
             </select>
         </div>
@@ -48,20 +54,33 @@
     <!--Map-->
     <div id="map"></div>
 
-    <!--Public holiday-->
+
+
+    <!-- Public holiday -->
 
     <div class="modal fade" id="holidayModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-bs-backdrop="false" data-bs-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-secondary text-white ">
                     <h5 class="modal-title" id="exampleModalLabel">Public Holidays</h5>
-
-
-
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
+                    <table class="table table-striped">
+                        <tbody>
+                            <!-- Add your holiday data here -->
+                            <tr>
+                                <td>Holiday Name 1</td>
+                                <td class="text-end">Holiday Date 1</td>
+                            </tr>
+                            <tr>
+                                <td>Holiday Name 2</td>
+                                <td class="text-end">Holiday Date 2</td>
+                            </tr>
+                            <!-- Add more holiday rows as needed -->
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -71,93 +90,110 @@
     </div>
 
 
-    <!--Weather-->
-
-    <div class="modal fade" tabindex="-1" role="dialog" id="weatherModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Weather Information</h5>
-
-                </div>
-                <div class="modal-body">
-                    <p>Temperature: <span id="temp"></span>°C</p>
-                    <p>Feels Like: <span id="feels_like"></span>°C</p>
-                    <p>Min Temp: <span id="temp_min"></span>°C</p>
-                    <p>Max Temp: <span id="temp_max"></span>°C</p>
-                    <p>Pressure: <span id="pressure"></span> hPa</p>
-                    <p>Humidity: <span id="humidity"></span>%</p>
-                    <p>Weather: <span id="main"></span></p>
-                    <p>Description: <span id="description"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!--Country info-->
 
-    <div id="countryModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="countryModal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="false"
+        data-bs-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-secondary text-white ">
                     <h5 id="modalTitle" class="modal-title">Country information</h5>
-
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Continent: <span id="continent"></span></p>
-                    <p>Country: <span id="country"></span></p>
-                    <p>Capital: <span id="capital"></span></p>
-                    <p>Population: <span id="population"></span></p>
-                    <p>Area: <span id="area"></span> sq km</p>
-                    <p>Currency: <span id="currency"></span></p>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Continent</td>
+                                <td class="text-end"><span id="continent"></span></td>
+                            </tr>
+                            <tr>
+                                <td>Country</td>
+                                <td class="text-end"><span id="country"></span></td>
+                            </tr>
+                            <tr>
+                                <td>Capital</td>
+                                <td class="text-end"><span id="capital"></span></td>
+                            </tr>
+                            <tr>
+                                <td>Population</td>
+                                <td class="text-end"><span id="population"></span></td>
+                            </tr>
+                            <tr>
+                                <td>Area</td>
+                                <td class="text-end"><span id="area"></span> sq km</td>
+                            </tr>
+                            <tr>
+                                <td>Currency</td>
+                                <td class="text-end"><span id="currency"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
 
     <!--Currency converter-->
 
-    <div id="currencyModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Currency Conversion</h5>
+    <div id="currencyModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-secondary bg-gradient text-white">
+                    <h5 class="modal-title">Currency calculator</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p id="baseCurrencyCode"></p>
-                    <p id="baseCurrencyName"></p>
-                    <p id="convertedCurrencyCode"></p>
-                    <p id="convertedCurrencyName"></p>
-                    <p id="conversionRate"></p>
-                    <hr>
-                    <label for="amountToConvert" id="amountToConvertLabel">Amount in country currency:</label>
-                    <input type="number" id="amountToConvert" min="0" step="0.01" value="0">
-                    <button id="convertBtn" type="button" class="btn btn-primary">Convert</button>
-                    <hr>
-                    <p id="convertedAmount"></p>
+                    <form>
+                        <div class="form-floating mb-3">
+                            <input id="fromAmount" type="number" class="form-control" value="1" min="1" step="1">
+                            <label id="fromAmountLabel" for="fromAmount">From GBP</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input id="currencyTo" type="text" class="form-control" value="" disabled>
+                            <label for="currencyTo">Convert to</label>
+                        </div>
+                        <div class="form-floating">
+                            <input id="toAmount" type="text" class="form-control" disabled>
+                            <label for="toAmount">Result</label>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm myBtn"
+                        data-bs-dismiss="modal">CLOSE</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
 
 
     <!--Wikipedia -->
 
-    <div id="wikipediaModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="wikipediaModal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="false"
+        data-bs-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-secondary text-white ">
                     <h5 class="modal-title">Country Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <h5 id="wikiTitle"></h5>
@@ -165,48 +201,191 @@
                     <a id="wikiLink" href="#" target="_blank">Read More on Wikipedia</a>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
 
-      <!--Pictures-->
 
-      
 
-<div class="modal fade" id="picturesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Country Images</h5>
-                
-            </div>
-            <div class="modal-body">
-                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner" id="carouselInner">
-                        
+    <!--Pictures-->
+
+
+    <div class="modal fade" id="picturesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        data-bs-backdrop="false" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary text-white">
+                    <h5 class="modal-title" id="myModalLabel">Country Images</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner" id="carouselInner">
+
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
-                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-    
+    <!--Weather2-->
+
+    <div id="weatherModal2" class="modal fade " tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false"
+        aria-labelledby="weatherModalLabel" aria-hidden="true">
+
+
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+
+
+            <div class="modal-content shadow">
+
+                <div class="modal-header bg-secondary bg-gradient text-white">
+
+                    <h5 class="modal-title" id="weatherModalLabel"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div id="pre-load"></div>
+
+
+
+                    <div class="row">
+
+                        <div class="col border m-2">
+
+                            <p class="fw-bold fs-5 mt-3">TODAY</p>
+
+                            <div class="row">
+
+                                <div class="col text-center m-2">
+
+                                    <p id="todayConditions" class="fw-bold fs-6"></p>
+
+                                </div>
+
+                                <div class="col text-center">
+
+                                    <img id="todayIcon" class="img-fluid mt-0" src="" alt="" title="">
+
+                                </div>
+
+                                <div class="col text-center">
+
+                                    <p class="fw-bold fs-4 mb-0"><span id="todayMaxTemp"></span>°C</p>
+                                    <p class="fs-5 mt-0 text-secondary"><span id="todayMinTemp"></span>°C</p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col border m-2">
+
+                            <div class="row">
+
+                                <div class="col text-center">
+
+                                    <p id="day1Date" class="fw-bold fs-6 mt-3"></p>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col text-center">
+
+                                    <p class="fw-bold fs-4 mb-0"><span id="day1MaxTemp"></span>°C</p>
+                                    <p class="fs-5 mt-0 text-secondary"><span id="day1MinTemp"></span>°C</p>
+
+                                </div>
+
+                                <div class="col text-center">
+
+                                    <img id="day1Icon" src="" alt="" title="">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col border m-2">
+
+                            <div class="row">
+
+                                <div class="col text-center">
+
+                                    <p id="day2Date" class="fw-bold fs-6 mt-3"></p>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col text-center">
+
+                                    <p class="fw-bold fs-4 mb-0"><span id="day2MaxTemp"></span>°C</p>
+                                    <p class="fs-5 mt-0 text-secondary"><span id="day2MinTemp"></span>°C</p>
+
+                                </div>
+
+                                <div class="col text-center">
+
+                                    <img id="day2Icon" src="" alt="" title="">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <p class="fs-6 fw-light">Last updated <span id="lastUpdated"></span>. Powered by <a
+                            href="https://www.weatherapi.com/" target="_blank"
+                            title="Free Weather API">WeatherAPI.com</a></p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
 
 
 
@@ -221,6 +400,10 @@
 
     <script src="libs/js/easy-button.js"></script>
 
+    <script src="libs/js/moment.min.js"></script>
+
+    <!--script src="libs/js/moment.min.js.map"></script-->
+
     <script src="libs/js/Leaflet.ExtraMarkers/dist/js/leaflet.extra-markers.js"></script>
 
     <script src="libs/js/Leaflet.Markercluster/dist/leaflet.markercluster-src.js"></script>
@@ -230,6 +413,8 @@
     <script src="libs/js/L.Control.Locate.min.js" charset="utf-8"></script>
 
     <script src="libs/js/jquery-3.6.4.js"></script>
+
+    <script src="libs/js/Numeral-js/min/numeral.min.js"></script>
 
     <script src="libs/assets/bootstrap/js/bootstrap.min.js"></script>
 

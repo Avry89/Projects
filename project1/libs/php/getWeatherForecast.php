@@ -1,58 +1,67 @@
+
+
 <?php
-  ini_set('display_errors', 'On');
-  error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
 
-  $countryCode = $_POST['countryCode'];
-  $username = "bavram"; 
+$countryCode = $_POST['countryCode'];
+$username = "bavram"; 
 
-  // Fetch country info from Geonames API
-  $url = "http://api.geonames.org/countryInfoJSON";
-  $queryParams = [
-      'formatted' => true,
-      'country' => $countryCode,
-      'username' => $username
-  ];
+// Fetch country info from Geonames API
+$url = "http://api.geonames.org/countryInfoJSON";
+$queryParams = [
+    'formatted' => true,
+    'country' => $countryCode,
+    'username' => $username
+];
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_URL, $url . '?' . http_build_query($queryParams));
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_URL, $url . '?' . http_build_query($queryParams));
 
-  $result = curl_exec($ch);
-  $decode = json_decode($result, true);
+$result = curl_exec($ch);
+$decode = json_decode($result, true);
 
-  $capital = $decode['geonames'][0]['capital'];
+$capital = $decode['geonames'][0]['capital'];
 
-  // Get latitude and longitude for the capital of the country
-  $url = "http://api.geonames.org/searchJSON";
-  $capitalQueryParams = [
-      'q' => $capital,
-      'maxRows' => 1,
-      'username' => $username
-  ];
+// Use the fetched capital to get weather data from Weather API
+$apiKey = '8c5822c88193417c849203621230206'; 
+$weatherUrl = "http://api.weatherapi.com/v1/forecast.json";
+$weatherQueryParams = [
+    'key' => $apiKey,
+    'q' => $capital,
+    'days' => 3
+];
 
-  curl_setopt($ch, CURLOPT_URL, $url . '?' . http_build_query($capitalQueryParams));
-  $result = curl_exec($ch);
-  $decode = json_decode($result, true);
+curl_setopt($ch, CURLOPT_URL, $weatherUrl . '?' . http_build_query($weatherQueryParams));
+$result = curl_exec($ch);
+$decode = json_decode($result, true);
 
-  $lat = $decode['geonames'][0]['lat'];
-  $lng = $decode['geonames'][0]['lng'];
+// Extract forecast data for the next 3 days
+$forecast = [];
+for ($i = 0; $i < 3; $i++) {
+    $dayForecast = $decode['forecast']['forecastday'][$i];
+    $forecast[] = [
+        'date' => $dayForecast['date'],
+        'minC' => $dayForecast['day']['mintemp_c'],
+        'maxC' => $dayForecast['day']['maxtemp_c'],
+        'conditionIcon' => $dayForecast['day']['condition']['icon'],
+        'conditionText' => $dayForecast['day']['condition']['text']
+    ];
+}
 
-  // Use the fetched coordinates to get weather data from OpenWeather API
-  $apiKey = '7ebb7cf0ddf73f176c24bf29e5c7fd5f'; 
-  $weatherUrl = "http://api.openweathermap.org/data/2.5/weather?lat={$lat}&lon={$lng}&appid={$apiKey}&units=metric";
+curl_close($ch);
 
-  curl_setopt($ch, CURLOPT_URL, $weatherUrl);
-  $result = curl_exec($ch);
-  $decode = json_decode($result, true);
+// Prepare the data to be sent back
+$data = [
+    'location' => $decode['location']['name'],
+    'country' => $decode['location']['country'],
+    'forecast' => $forecast,
+    'lastUpdated' => $decode['current']['last_updated']
+];
 
-  $main = $decode["main"];
-  $weather = $decode["weather"][0];
-  $output['data'] = array_merge($main, $weather);
-
-  curl_close($ch);
-
-  // Send the result back to the AJAX call
-  header('Content-Type: application/json; charset=UTF-8');
-  echo json_encode($output);
+// Send the result back to the AJAX call
+header('Content-Type: application/json; charset=UTF-8');
+echo json_encode(['status' => ['code' => 200], 'data' => $data]);
 ?>

@@ -1,10 +1,14 @@
 
 $(document).ready(function () {
-    $(".preloader").fadeOut("slow");
-    $('select').removeAttr('hidden');
-
+    setTimeout(function () {
+        // Delayed fade out of the preloader
+        $(".preloader").fadeOut("slow", function () {
+            // Preloader fade out complete callback
+            // Show the select dropdown
+            $('select').removeAttr('hidden');
+        });
+    }, 2000); // Adjust the delay time (in milliseconds) as needed
 });
-
 
 // Tile layer variables
 
@@ -28,87 +32,137 @@ const myMap = L.map('map', { maxZoom: 18, minZoom: 3, zoomControl: false, layers
 
 // Thunder forest tiles layers 
 
-let layerControl = L.control.layers(mapBaseLayers, null, { position: 'topleft' });
+
+// Earthquake, cities and airports
+
+var cityIcons = L.ExtraMarkers.icon({
+    icon: "fa fa-city",
+    iconColor: "white",
+    markerColor: 'green',
+    shape: "square",
+    prefix: "fa",
+
+});
+
+var airportIcon = L.ExtraMarkers.icon({
+    icon: "fa fa-plane",
+    iconColor: "black",
+    markerColor: "white",
+    shape: "square",
+    prefix: "fa",
+
+});
+
+earthquakeIcon = L.ExtraMarkers.icon({
+    icon: 'fas fa-globe-europe ',
+    markerColor: 'green',
+    iconColor: 'black',
+    shape: 'penta',
+    prefix: 'fa',
+
+});
+
+var cityLayerGroup = L.layerGroup(); // Define cityLayerGroup as a Leaflet layer group
+var airportLayerGroup = L.layerGroup(); // Define airportLayerGroup as a Leaflet layer group
+var earthquakeLayerGroup = L.layerGroup();
+
+var overlayLayers = {
+    "Cities": cityLayerGroup,
+    "Airports": airportLayerGroup,
+    "Earthquakes": earthquakeLayerGroup
+};
+
+// Add the cityLayerGroup and airportLayerGroup to the map
+myMap.addLayer(cityLayerGroup);
+myMap.addLayer(airportLayerGroup);
+myMap.addLayer(earthquakeLayerGroup);
+
+
+
+
+let layerControl = L.control.layers(mapBaseLayers, overlayLayers, null, { position: 'topright' });
 layerControl.addTo(myMap);
 
 // Zoom and scale of the map
 
-L.control.zoom({ position: 'topright' }).addTo(myMap)
+L.control.zoom({ position: 'topleft' }).addTo(myMap)
 L.control.scale().addTo(myMap);
 
 // Buttons
 
 let btn1 = L.easyButton({
     states: [{
-      stateName: 'show-country',
-      icon: 'fa-info-circle',
-      title: 'Country Info',
-      onClick: function (control) {
-        $("#countryModal").modal("show");
-      }
+        stateName: 'show-country',
+        icon: 'fa-info-circle',
+        title: 'Country Info',
+        onClick: function (control) {
+            $("#countryModal").modal("show");
+        }
     }]
-  }).addTo(myMap);
-  
-  let btn2 = L.easyButton({
+}).addTo(myMap);
+
+let btn2 = L.easyButton({
     states: [{
-      stateName: 'show-currency',
-      icon: 'fa-usd',
-      title: 'Currency Exchange',
-      onClick: function (control) {
-        $("#currencyModal").modal("show");
-        currencyExchange();
-      }
+        stateName: 'show-currency',
+        icon: 'fas fa-dollar-sign',
+        title: 'Currency Exchange',
+        onClick: function (control) {
+            $("#currencyModal").modal("show");
+            currencyExchange();
+        }
     }]
-  }).addTo(myMap);
-  
-  let btn3 = L.easyButton({
+}).addTo(myMap);
+
+let btn3 = L.easyButton({
     states: [{
-      stateName: 'show-weather',
-      icon: 'fa-cloud',
-      title: 'Weather Forecast',
-      onClick: function (control) {
-        $("#weatherModal").modal("show");
-        weatherForecast();
-      }
+        stateName: 'show-weather',
+        icon: 'fa-cloud',
+        title: 'Weather Forecast',
+        onClick: function (control) {
+            $("#weatherModal2").modal("show");
+            weatherForecast2();
+        }
     }]
-  }).addTo(myMap);
-  
-  let btn4 = L.easyButton({
+}).addTo(myMap);
+
+let btn4 = L.easyButton({
     states: [{
-      stateName: 'show-holidays',
-      icon: 'fa-gifts',
-      title: 'Public Holidays',
-      onClick: function (control) {
-        $("#holidayModal").modal("show");
-        publicHolidays();
-      }
+        stateName: 'show-holidays',
+        icon: 'fa-gifts',
+        title: 'Public Holidays',
+        onClick: function (control) {
+            $("#holidayModal").modal("show");
+            publicHolidays();
+        }
     }]
-  }).addTo(myMap);
-  
-  let btn5 = L.easyButton({
+}).addTo(myMap);
+
+let btn5 = L.easyButton({
     states: [{
-      stateName: 'show-wikipedia',
-      icon: '<i class="fa-brands fa-wikipedia-w"></i>',
-      title: 'Wikipedia',
-      onClick: function (control) {
-        $("#wikipediaModal").modal("show");
-        showWikipedia();
-      }
+        stateName: 'show-wikipedia',
+        icon: 'fab fa-wikipedia-w',
+        title: 'Wikipedia',
+        onClick: function (control) {
+            $("#wikipediaModal").modal("show");
+            showWikipedia();
+        }
     }]
-  }).addTo(myMap);
-  
-  let btn6 = L.easyButton({
+}).addTo(myMap);
+
+let btn6 = L.easyButton({
     states: [{
-      stateName: 'show-pictures',
-      icon: 'fa-image',
-      title: 'Country Pictures',
-      onClick: function (control) {
-        $("#picturesModal").modal("show");
-        displayCountryImages();
-      }
+        stateName: 'show-pictures',
+        icon: 'fa-image',
+        title: 'Country Pictures',
+        onClick: function (control) {
+            $("#picturesModal").modal("show");
+            displayCountryImages();
+        }
     }]
-  }).addTo(myMap);
-  
+}).addTo(myMap);
+
+
+
 
 
 
@@ -159,8 +213,11 @@ function showLocation(location, populateModalCallback,) {
                 displayCountryMap(result.data.countryCode);
 
                 // Call the functions to update markers
+
+                getCities(result.data.countryCode);
+                getAirports(result.data.countryCode);
                 displayEarthquakeMarkers(result.data.countryCode);
-                displayPlaceOfInterestMarkers(result.data.countryCode);
+
 
                 populateModalCallback();
             }
@@ -211,9 +268,12 @@ let countryBorder;
 $('#selectCountry').on('change', () => {
     let countryIso = $('#selectCountry').val();
 
+
+
     displayCountryMap(countryIso);
+    getCities(countryIso);
+    getAirports(countryIso);
     displayEarthquakeMarkers(countryIso);
-    displayPlaceOfInterestMarkers(countryIso);
     countryInformation();
 
     // Get country borders and add to map
@@ -282,6 +342,11 @@ $('#selectCountry').on('change', () => countryInformation());
 
 // Currency exchange
 
+
+
+
+// Currency exchange
+
 function currencyExchange() {
     const countryCode = $("#selectCountry").val();
     $.ajax({
@@ -298,22 +363,24 @@ function currencyExchange() {
             let convertedCurrencyName = response.data.rates[convertedCurrencyCode].currency_name;
             let conversionRate = response.data.rates[convertedCurrencyCode].rate;
 
-            $("#baseCurrencyCode").text("Base Currency Code: " + baseCurrencyCode);
-            $("#baseCurrencyName").text("Base Currency Name: " + baseCurrencyName);
-            $("#convertedCurrencyCode").text("Country Currency Code: " + convertedCurrencyCode);
-            $("#convertedCurrencyName").text("Country Currency Name: " + convertedCurrencyName);
-            $("#conversionRate").text("Conversion Rate: " + conversionRate);
-            $("#amountToConvertLabel").text("Amount in " + convertedCurrencyName + ":");
+            // Clear previous results and inputs
+            $("#fromAmount").val("1"); // Reset the "From" input to 1
+            $("#toAmount").val((1 * conversionRate).toFixed(2)); // Perform initial conversion for 1 and display in "Result" input
+
+            // Set labels and fields
+            $("#fromAmountLabel").text("From " + baseCurrencyName);
+            $("#currencyTo").val(" " + convertedCurrencyName);
 
             // Clears the 0 when user clicks on input field
-            $("#amountToConvert").focus(function () {
+            $("#fromAmount").focus(function () {
                 $(this).val('');
             });
 
-            $("#convertBtn").click(function () {
-                let amountToConvert = $("#amountToConvert").val();
-                let convertedAmount = (amountToConvert / conversionRate).toFixed(2);  // Adds only 2 digits after decimal point
-                $("#convertedAmount").text("Converted Amount: " + convertedAmount + " " + baseCurrencyName);
+            // Perform conversion when base amount changes
+            $("#fromAmount").on('input', function () {
+                let fromAmount = $(this).val();
+                let toAmount = (fromAmount * conversionRate).toFixed(2);  // Adds only 2 digits after decimal point
+                $("#toAmount").val(toAmount);
             });
 
             $("#currencyModal").modal("show");
@@ -322,19 +389,28 @@ function currencyExchange() {
             console.log("Error: ", err);
         }
     });
-
-
-    // Function to clear the input field and result when you close modal so you can do another conversion without the need to refresh the page.
-    $("#currencyModal").on("hidden.bs.modal", function () {
-        $("#amountToConvert").val('0');
-        $("#convertedAmount").text('');
-    });
 }
+
+
+
+
+
+
+
+
+
+
 
 //  Weather 
 
-function weatherForecast() {
+function weatherForecast2() {
     const countryCode = $("#selectCountry").val();
+
+    $('#pre-load').fadeIn();
+
+    
+
+
     $.ajax({
         url: "libs/php/getWeatherForecast.php",
         type: "POST",
@@ -343,21 +419,39 @@ function weatherForecast() {
             countryCode: countryCode
         },
         success: function (result) {
-            $('#temp').text(result.data.temp);
-            $('#feels_like').text(result.data.feels_like);
-            $('#temp_min').text(result.data.temp_min);
-            $('#temp_max').text(result.data.temp_max);
-            $('#pressure').text(result.data.pressure);
-            $('#humidity').text(result.data.humidity);
-            $('#main').text(result.data.main);
-            $('#description').text(result.data.description);
+            var d = result.data;
 
+            $('#weatherModalLabel').html(d.location + ", " + d.country);
+
+            $('#todayConditions').html(d.forecast[0].conditionText);
+            $('#todayIcon').attr("src", d.forecast[0].conditionIcon);
+            $('#todayMaxTemp').html(d.forecast[0].maxC);
+            $('#todayMinTemp').html(d.forecast[0].minC);
+
+            $('#day1Date').text(moment(d.forecast[1].date).format("ddd Do"));
+            $('#day1Icon').attr("src", d.forecast[1].conditionIcon);
+            $('#day1MinTemp').text(d.forecast[1].minC);
+            $('#day1MaxTemp').text(d.forecast[1].maxC);
+
+            $('#day2Date').text(moment(d.forecast[2].date).format("ddd Do"));
+            $('#day2Icon').attr("src", d.forecast[2].conditionIcon);
+            $('#day2MinTemp').text(d.forecast[2].minC);
+            $('#day2MaxTemp').text(d.forecast[2].maxC);
+
+            $('#lastUpdated').text(moment(d.lastUpdated).format("HH:mm, Do MMM"));
+
+            $('#pre-load').fadeOut();
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            $('#weatherModal2 .modal-title').replaceWith("Error retrieving data");
             console.log(textStatus, errorThrown);
         }
     });
 }
+
+
+
+
 
 // Public holidays
 
@@ -373,14 +467,15 @@ function publicHolidays() {
         success: function (result) {
             let holidays = result;
 
-            let tableHtml = '<table class="table">';
-            tableHtml += '<thead><tr><th>Date</th><th>Name</th></tr></thead>';
+            let tableHtml = '<table class="table table-striped">';
             tableHtml += '<tbody>';
 
             for (let i = 0; i < holidays.length; i++) {
+                let formattedDate = moment(holidays[i].date).format("YYYY-MM-DD");
+
                 tableHtml += '<tr>';
-                tableHtml += '<td>' + holidays[i].date + '</td>';
-                tableHtml += '<td>' + holidays[i].name + '</td>';
+                tableHtml += '<td class="text-start">' + holidays[i].name + '</td>';
+                tableHtml += '<td class="text-end">' + holidays[i].date + '</td>';
                 tableHtml += '</tr>';
             }
 
@@ -401,7 +496,8 @@ function publicHolidays() {
 
 
 
-$('#selectCountry').change(publicHolidays);
+
+
 
 // Wikipedia 
 
@@ -431,7 +527,7 @@ function showWikipedia() {
 // Country pictures
 
 function displayCountryImages() {
-    const countryCode = $("#selectCountry").val(); 
+    const countryCode = $("#selectCountry").val();
     $.ajax({
         url: "libs/php/getCountryPictures.php",
         type: "GET",
@@ -442,14 +538,14 @@ function displayCountryImages() {
         success: function (result) {
             let images = result.data.unsplash || [];
             let imageHtml = '';
-        
+
             for (let i = 0; i < images.length; i++) {
                 let activeClass = i === 0 ? 'active' : '';
                 imageHtml += '<div class="carousel-item ' + activeClass + '">';
                 imageHtml += '<img class="d-block w-100" src="' + (images[i].urls?.small || '') + '">';
                 imageHtml += '</div>';
             }
-            
+
             $('#carouselInner').html(imageHtml);
             $('#carouselExampleIndicators').carousel();  // initialize the carousel
             $('#picturesModal').modal('show');
@@ -460,113 +556,115 @@ function displayCountryImages() {
     });
 }
 
-// Earthquake and Place of interest markers
-
-let overlay = L.markerClusterGroup({
-    iconCreateFunction: function (cluster) {
-        return L.divIcon({
-            html: '<div><span>' + cluster.getChildCount() + '</span></div>',
-            className: 'my-cluster-icon',
-            iconSize: L.point(40, 40)
-        });
-    }
-});
 
 
-let earthquake = L.featureGroup.subGroup(overlay);
-let placesOfInterest = L.featureGroup.subGroup(overlay);
+// Earthquake, cities and airports
 
-overlay.addTo(myMap);
-
-// Adding the cluster group to the overlay drop down menu
-
-layerControl.addOverlay(earthquake, "Earthquake");
-layerControl.addOverlay(placesOfInterest, "Place of Interest");
-
-// Getting the overlay markers based on the country selected
-
-function displayEarthquakeMarkers(countryCode) {
-    earthquake.clearLayers();
-
+function getCities(countryCode) {
     $.ajax({
-        url: "libs/php/getCoordinates.php",
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            countryCord: countryCode
-        },
-        success: function (result) {
-            let north = result.data.geonames[0].north;
-            let east = result.data.geonames[0].east;
-            let south = result.data.geonames[0].south;
-            let west = result.data.geonames[0].west;
-            // Earthquake  
-            $.ajax({
-                url: "libs/php/getEarthquakeInfo.php",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    north: north,
-                    south: south,
-                    east: east,
-                    west: west
-                },
-                success: function (result) {
-                    if (result.status.name == "ok") {
-
-                        let earthquakes = result.data
-
-                        for (let i = 0; i < earthquakes.length; i++) {
-
-                            let lat = result.data[i].lat;
-                            let lng = result.data[i].lng;
-                            let mag = result.data[i].magnitude;
-                            let depth = result.data[i].depth;
-
-                            earthquakeIcon = L.ExtraMarkers.icon({
-                                icon: 'fas fa-globe-americas fa-2x',
-                                markerColor: 'red',
-                                iconColor: 'white',
-                                shape: 'penta',
-                                prefix: 'fa',
-                                extraClasses: 'my-extra-class'
-                            });
-
-
-
-                            let earthquakes = L.marker([lat, lng], { icon: earthquakeIcon });
-
-                            earthquakes.bindPopup('<div class="popup-header"><b>Earthquake</b></div>'
-                                + '<div class="popup-coordinates">Coordinates: (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')</div>'
-                                + '<hr class="m-2">'
-                                + '<div class="popup-magnitude">Magnitude: ' + mag + '</div>'
-                                + '<div class="popup-depth">Depth: ' + depth + ' km</div>'
-                                , { 'className': 'custom-popup' });
-
-
-                            earthquake.addLayer(earthquakes);
-
-                        }
-
-                    };
-                }, error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("ERROR")
+        url: "libs/php/getCities.php",
+        type: "POST",
+        dataType: "json",
+        data: { countryCode: countryCode },
+        success: function (res) {
+            let markers = L.markerClusterGroup({
+                polygonOptions: {
+                    fillColor: "green",
+                    color: "green",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.5,
+                    radius: 50,
+                    className: 'city-cluster'
                 },
             });
+
+            for (let i = 0; i < res.data.length; i++) {
+                const cityLatLng = [res.data[i].lat, res.data[i].lng];
+
+                let cityName = res.data[i].name;
+                let population = res.data[i].population;
+                let nearbyCitiesMarker = L.marker(cityLatLng, {
+                    icon: cityIcons,
+                });
+                nearbyCitiesMarker.bindTooltip(
+                    `<strong>${cityName}</strong><div class='col text-center'><br> ${population.toLocaleString()}`,
+                    {
+                        direction: 'top',
+                        sticky: true,
+                        className: 'custom-tooltip',
+                        offset: [0, -10],
+                    }
+                );
+
+                markers.addLayer(nearbyCitiesMarker);
+            }
+
+            cityLayerGroup.clearLayers(); // Clear previous city markers
+            cityLayerGroup.addLayer(markers); // Add the markers to the cityLayerGroup
+
+            // Remove previous cityLayerGroup from the map and add the updated one
+            myMap.removeLayer(cityLayerGroup);
+            myMap.addLayer(cityLayerGroup);
         },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log("ERROR")
-        }
     });
 }
 
-function displayPlaceOfInterestMarkers(countryCode) {
-    placesOfInterest.clearLayers();
+function getAirports(countryCode) {
+    $.ajax({
+        url: "libs/php/getAirports.php",
+        type: "POST",
+        dataType: "json",
+        data: { countryCode: countryCode },
+        success: function (res) {
+            let markers = L.markerClusterGroup({
+                polygonOptions: {
+                    fillColor: "white",
+                    color: "white",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.5,
+                    radius: 50,
+                    className: 'airport-cluster'
+                },
+            });
 
+            for (let i = 0; i < res.data.length; i++) {
+                const airportLatLng = [res.data[i].lat, res.data[i].lng];
+
+                let airportName = res.data[i].name;
+
+                let nearbyAirportMarker = L.marker(airportLatLng, {
+                    icon: airportIcon,
+                });
+                nearbyAirportMarker.bindTooltip(airportName, {
+                    direction: 'top',
+                    sticky: true,
+                    className: 'custom-tooltip',
+                    offset: [0, -10],
+                });
+
+                markers.addLayer(nearbyAirportMarker);
+            }
+
+            airportLayerGroup.clearLayers(); // Clear previous airport markers
+            airportLayerGroup.addLayer(markers); // Add the markers to the airportLayerGroup
+
+            // Remove previous airportLayerGroup from the map and add the updated one
+            myMap.removeLayer(airportLayerGroup);
+            myMap.addLayer(airportLayerGroup);
+        },
+    });
+}
+
+
+// Earthquake
+
+function displayEarthquakeMarkers(countryCode) {
     $.ajax({
         url: "libs/php/getCoordinates.php",
-        type: 'POST',
-        dataType: 'json',
+        type: "POST",
+        dataType: "json",
         data: {
             countryCord: countryCode
         },
@@ -576,12 +674,11 @@ function displayPlaceOfInterestMarkers(countryCode) {
             let south = result.data.geonames[0].south;
             let west = result.data.geonames[0].west;
 
-            //Place of interest
-
+            // Earthquake
             $.ajax({
-                url: "libs/php/getPlacesOfInterest.php",
-                type: 'POST',
-                dataType: 'json',
+                url: "libs/php/getEarthquakeInfo.php",
+                type: "POST",
+                dataType: "json",
                 data: {
                     north: north,
                     south: south,
@@ -590,47 +687,64 @@ function displayPlaceOfInterestMarkers(countryCode) {
                 },
                 success: function (result) {
                     if (result.status.name == "ok") {
+                        let earthquakes = result.data;
 
-                        placesOfInterest.clearLayers();
+                        let earthquake = L.markerClusterGroup({
+                            polygonOptions: {
+                                fillColor: "white",
+                                color: "white",
+                                weight: 1,
+                                opacity: 1,
+                                fillOpacity: 0.5,
+                                radius: 50
+                            }
+                        });
 
-                        for (let i = 0; i < result.data.length; i++) {
-                            (function () {
-                                let lat = result.data[i].lat;
-                                let lng = result.data[i].lng;
-                                let wiki = result.data[i].wikipediaUrl;
-                                let title = result.data[i].title;
+                        for (let i = 0; i < earthquakes.length; i++) {
+                            let lat = earthquakes[i].lat;
+                            let lng = earthquakes[i].lng;
+                            let mag = earthquakes[i].magnitude;
+                            let depth = earthquakes[i].depth;
+                            let datetime = earthquakes[i].datetime;
 
-                                let icon = L.ExtraMarkers.icon({
-                                    icon: 'fas fa-map-marker-alt fa-3x',
-                                    markerColor: 'blue',
-                                    iconColor: 'grey',
-                                    shape: 'circle',
-                                    prefix: 'fa',
-                                    extraClasses: 'my-interest-marker-class'
-                                });
+                            let formattedDate = moment(datetime).format("h:mm a on Do MMMM YYYY");
 
+                            let marker = L.marker([lat, lng], { icon: earthquakeIcon });
 
-                                let placeOfInterest = L.marker([lat, lng], { icon: icon });
+                            marker.bindTooltip(
+                                '<div class="text-center">(' +
+                                lat.toFixed(4) +
+                                ", " +
+                                lng.toFixed(4) +
+                                ")</div>" +
+                                '<div class="popup-datetime text-center">An earthquake of ' +
+                                mag +
+                                " magnitude to a depth of " +
+                                depth +
+                                " km at " +
+                                formattedDate +
+                                "</div>",
+                                { direction: "top", sticky: true }
+                            );
 
-                                placeOfInterest.bindPopup('<b>' + title + '</b><br>'
-                                    + '(' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')<hr class="m-2">'
-                                    + '<br>' + `<a target="_blank" style="color:black; text-decoration:none;" href="//${wiki}">More information</a>`
-                                    , { 'className': 'custom-popup' });
-
-                                placesOfInterest.addLayer(placeOfInterest);
-                            })();
-
-                            if (i > 30) break;
+                            earthquake.addLayer(marker);
                         }
-                    };
-                }, error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("ERROR")
-                },
-            });
 
+                        earthquakeLayerGroup.clearLayers(); // Clear previous earthquake markers
+                        earthquakeLayerGroup.addLayer(earthquake); // Add the markers to the earthquakeLayerGroup
+
+                        // Remove previous earthquakeLayerGroup from the map and add the updated one
+                        myMap.removeLayer(earthquakeLayerGroup);
+                        myMap.addLayer(earthquakeLayerGroup);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("ERROR");
+                }
+            });
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            console.log("ERROR")
+            console.log("ERROR");
         }
     });
 }

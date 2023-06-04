@@ -289,7 +289,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 	display: block;
 	text-align: center;
 	text-decoration: none;
-	color: black;
+	color: white;
 	}
 .leaflet-bar a,
 .leaflet-control-layers-toggle {
@@ -324,12 +324,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-touch .leaflet-bar a:first-child {
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
-	background-color: #2a9d8f;
+	background-color: #6C757D;
 	}
 .leaflet-touch .leaflet-bar a:last-child {
 	border-bottom-left-radius: 2px;
 	border-bottom-right-radius: 2px;
-	background-color: #2a9d8f;
+	background-color: #6C757D;
 	}
 
 /* zoom control */
@@ -337,7 +337,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
 	font: bold 18px 'Lucida Console', Monaco, monospace;
-	text-indent: 1px;
+	text-indent: 0px;
 	}
 
 .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
@@ -349,7 +349,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .leaflet-control-layers {
 	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-	background: #2a9d8f;
+	background: #6C757D;
 	border-radius: 5px;
 	}
 .leaflet-control-layers-toggle {
