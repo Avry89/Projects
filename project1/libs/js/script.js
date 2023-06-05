@@ -408,7 +408,6 @@ function weatherForecast2() {
 
     $('#pre-load').fadeIn();
 
-    
 
 
     $.ajax({
@@ -425,18 +424,18 @@ function weatherForecast2() {
 
             $('#todayConditions').html(d.forecast[0].conditionText);
             $('#todayIcon').attr("src", d.forecast[0].conditionIcon);
-            $('#todayMaxTemp').html(d.forecast[0].maxC);
-            $('#todayMinTemp').html(d.forecast[0].minC);
+            $('#todayMaxTemp').html(Math.floor(d.forecast[0].maxC));
+            $('#todayMinTemp').html(Math.floor(d.forecast[0].minC));
 
             $('#day1Date').text(moment(d.forecast[1].date).format("ddd Do"));
             $('#day1Icon').attr("src", d.forecast[1].conditionIcon);
-            $('#day1MinTemp').text(d.forecast[1].minC);
-            $('#day1MaxTemp').text(d.forecast[1].maxC);
+            $('#day1MinTemp').text(Math.floor(d.forecast[1].minC));
+            $('#day1MaxTemp').text(Math.floor(d.forecast[1].maxC));
 
             $('#day2Date').text(moment(d.forecast[2].date).format("ddd Do"));
             $('#day2Icon').attr("src", d.forecast[2].conditionIcon);
-            $('#day2MinTemp').text(d.forecast[2].minC);
-            $('#day2MaxTemp').text(d.forecast[2].maxC);
+            $('#day2MinTemp').text(Math.floor(d.forecast[2].minC));
+            $('#day2MaxTemp').text(Math.floor(d.forecast[2].maxC));
 
             $('#lastUpdated').text(moment(d.lastUpdated).format("HH:mm, Do MMM"));
 
@@ -447,8 +446,8 @@ function weatherForecast2() {
             console.log(textStatus, errorThrown);
         }
     });
-}
 
+}
 
 
 
@@ -457,6 +456,8 @@ function weatherForecast2() {
 
 function publicHolidays() {
     const countryCode = $("#selectCountry").val();
+    const currentYear = new Date().getFullYear(); // Get the current year
+
     $.ajax({
         url: "libs/php/getPublicHolidays.php",
         type: "GET",
@@ -471,15 +472,18 @@ function publicHolidays() {
             tableHtml += '<tbody>';
 
             for (let i = 0; i < holidays.length; i++) {
-                let formattedDate = moment(holidays[i].date).format("YYYY-MM-DD");
+                let formattedDate = moment(holidays[i].date).format("Do MMM");
 
                 tableHtml += '<tr>';
                 tableHtml += '<td class="text-start">' + holidays[i].name + '</td>';
-                tableHtml += '<td class="text-end">' + holidays[i].date + '</td>';
+                tableHtml += '<td class="text-end">' + formattedDate + '</td>';
                 tableHtml += '</tr>';
             }
 
             tableHtml += '</tbody></table>';
+
+            // Dynamically set the modal title with the current year
+            $("#holidayModal .modal-title").html("Public Holidays " + currentYear);
 
             $("#holidayModal .modal-body").html(tableHtml);
             $("#holidayModal").modal("show");
@@ -493,6 +497,7 @@ function publicHolidays() {
         }
     });
 }
+
 
 
 
