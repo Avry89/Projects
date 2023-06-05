@@ -509,17 +509,19 @@ function publicHolidays() {
 function showWikipedia() {
     const countryCode = $("#selectCountry").val();
     $.ajax({
-        url: "libs/php/getWikipedia.php", // 
+        url: "libs/php/getWikipedia.php",
         type: "GET",
         dataType: "json",
         data: {
             countryCode: countryCode
         },
         success: function (response) {
-            if (response.data.wikipedia) {
-                $("#wikiTitle").text(response.data.wikipedia.title || "");
-                $("#wikiExtract").text(response.data.wikipedia.extract || "");
-                $("#wikiLink").attr("href", response.data.wikipedia.content_urls?.desktop?.page || "#");
+            if (response.data.wikipedia && response.data.wikipedia.geonames.length > 0) {
+                const wikipediaData = response.data.wikipedia.geonames[0];
+                $("#wikiTitle").text(wikipediaData.title || "");
+                $("#wikiExtract").text(wikipediaData.summary || "");
+                $("#wikiThumbnail").attr("src", wikipediaData.thumbnailImg || "");
+                $("#wikiLink").attr("href", "https://" + wikipediaData.wikipediaUrl || "#");
             }
             $("#wikipediaModal").modal("show");
         },
@@ -528,6 +530,8 @@ function showWikipedia() {
         }
     });
 }
+
+
 
 // Country pictures
 
@@ -541,13 +545,13 @@ function displayCountryImages() {
             countryCode: countryCode
         },
         success: function (result) {
-            let images = result.data.unsplash || [];
+            let images = result.data.pixabay || [];
             let imageHtml = '';
 
             for (let i = 0; i < images.length; i++) {
                 let activeClass = i === 0 ? 'active' : '';
                 imageHtml += '<div class="carousel-item ' + activeClass + '">';
-                imageHtml += '<img class="d-block w-100" src="' + (images[i].urls?.small || '') + '">';
+                imageHtml += '<img class="d-block w-100" src="' + (images[i].largeImageURL || '') + '">';
                 imageHtml += '</div>';
             }
 
@@ -560,6 +564,7 @@ function displayCountryImages() {
         }
     });
 }
+
 
 
 

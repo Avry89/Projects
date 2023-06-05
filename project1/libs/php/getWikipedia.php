@@ -27,9 +27,16 @@ $geonamesData = array_key_exists('geonames', $decode) ? $decode['geonames'] : nu
 // Wikipedia API
 
 $countryName = $geonamesData[0]['countryName'];
-$wikipediaUrl = "https://en.wikipedia.org/api/rest_v1/page/summary/" . urlencode($countryName);
+$wikipediaUrl = "http://api.geonames.org/wikipediaSearchJSON";
+$wikiParams = [
+    'formatted' => true,
+    'q' => $countryName,
+    'maxRows' => 10,
+    'username' => 'bavram'
+];
 
-curl_setopt($ch, CURLOPT_URL, $wikipediaUrl);
+curl_setopt($ch, CURLOPT_URL, $wikipediaUrl . '?' . http_build_query($wikiParams));
+
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "Accept: application/json"
 ]);

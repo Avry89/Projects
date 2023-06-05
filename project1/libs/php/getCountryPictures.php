@@ -26,17 +26,17 @@ $geonamesData = array_key_exists('geonames', $decode) ? $decode['geonames'] : nu
 if (!empty($geonamesData)) {
     $countryName = $geonamesData[0]['countryName']; // Get country name
 
-    // Now use the country name to make a request to the Unsplash API
+    // Now use the country name to make a request to the Pixabay API
 
-    $accessKey = 'Uvo_mLXdG1iM4qD9ckSlSS9qZdKtnV8dWCDbWI8BvX0'; 
-    $url = "https://api.unsplash.com/search/photos?query=$countryName&client_id=$accessKey";
+    $accessKey = '37046435-05d4bbb8e5f865bf875cb1c0a'; // Replace with your Pixabay API key
+    $url = "https://pixabay.com/api/?key=$accessKey&q=$countryName";
 
     curl_setopt($ch, CURLOPT_URL, $url);
-    $resultUnsplash = curl_exec($ch);
+    $resultPixabay = curl_exec($ch);
 
-    $decodeUnsplash = json_decode($resultUnsplash, true);
+    $decodePixabay = json_decode($resultPixabay, true);
 } else {
-    $decodeUnsplash = null;
+    $decodePixabay = null;
 }
 
 curl_close($ch);
@@ -50,7 +50,7 @@ $output = [
     ],
     'data' => [
         'geonames' => $geonamesData,
-        'unsplash' => $decodeUnsplash ? $decodeUnsplash['results'] : null // Add Unsplash results to output if available
+        'pixabay' => $decodePixabay ? $decodePixabay['hits'] : null // Add Pixabay results to output if available
     ]
 ];
 
