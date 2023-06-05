@@ -517,11 +517,23 @@ function showWikipedia() {
         },
         success: function (response) {
             if (response.data.wikipedia && response.data.wikipedia.geonames.length > 0) {
-                const wikipediaData = response.data.wikipedia.geonames[0];
-                $("#wikiTitle").text(wikipediaData.title || "");
-                $("#wikiExtract").text(wikipediaData.summary || "");
-                $("#wikiThumbnail").attr("src", wikipediaData.thumbnailImg || "");
-                $("#wikiLink").attr("href", "https://" + wikipediaData.wikipediaUrl || "#");
+                const countryName = response.data.geonames[0].countryName;
+                const articles = response.data.wikipedia.geonames;
+
+                // Filter articles based on country name or country code
+                const filteredArticles = articles.filter(function (article) {
+                    return (
+                        article.title.toLowerCase().includes(countryName.toLowerCase()) ||
+                        article.title.toLowerCase().includes(countryCode.toLowerCase())
+                    );
+                });
+
+                if (filteredArticles.length > 0) {
+                    const wikipediaData = filteredArticles[0];
+                    $("#wikiTitle").text(wikipediaData.title || "");
+                    $("#wikiExtract").text(wikipediaData.summary || "");
+                    $("#wikiLink").attr("href", "https://" + wikipediaData.wikipediaUrl || "#");
+                }
             }
             $("#wikipediaModal").modal("show");
         },
@@ -530,6 +542,7 @@ function showWikipedia() {
         }
     });
 }
+
 
 
 
