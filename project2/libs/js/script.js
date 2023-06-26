@@ -204,34 +204,32 @@ getEmployees();
 getLocations();
 
 function searchAll() {
-    getEmployees();
-    getDepartments();
-    getLocations();
+    const search = document.getElementById("allSearch").value;
+    getEmployees(search);
+    
 
     document.getElementById("employeePage").style.display = "block";
-    document.getElementById("departmentsPage").style.display = "block";
-    document.getElementById("locationsPage").style.display = "block";
+    
 }
 
 // 
-function getEmployees() {
+function getEmployees(search) {
     $.ajax({
         url: 'libs/php/getAll.php',
         type: 'GET',
         dataType: 'json',
-        data: {},
+        data: {
+            search: search // Pass the search parameter
+        },
         success: function (result) {
-
             document.getElementById("employeeList").innerHTML = "";
-
             allEmployees = result.data;
-
             currentDepartmentFilter = null;
-
             showAllEmployees();
         }
-    })
-};
+    });
+}
+
 
 // Get list of all employees, name, department  on load + sort on search -----------
 
@@ -295,6 +293,7 @@ function showAllEmployees() {
         }
     }
 }
+
 
 
 
