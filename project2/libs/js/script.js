@@ -30,6 +30,7 @@ function showPage(pageId, getDataFunc) {
 
 function showEverything() {
     showPage("employeePage", getEmployees);
+    showPage("departmentsPage", getDepartments);
 }
 
 function showAllDepartments() {
@@ -206,10 +207,12 @@ getLocations();
 function searchAll() {
     const search = document.getElementById("allSearch").value;
     getEmployees(search);
-    
+    getDepartments(search);
+    getLocations(search);
 
     document.getElementById("employeePage").style.display = "block";
-    
+    document.getElementById("departmentsPage").style.display = "block";
+    document.getElementById("locationsPage").style.display = "block";
 }
 
 // 
@@ -317,19 +320,17 @@ function shouldShowEmployee(employee) {
 
 // Show the list of departments ----------------------------------------------------
 
-function getDepartments() {
+function getDepartments(search) {
     $.ajax({
         url: 'libs/php/getAllDepartments.php',
         type: 'GET',
         dataType: 'json',
-        data: {},
+        data: {
+            search: search // Pass the search parameter
+        },
         success: function (result) {
-            const departmentsList = document.getElementById("departmentsList");
-            departmentsList.innerHTML = "";
-
+            document.getElementById("departmentsList").innerHTML = "";
             allDepartments = result.data;
-            currentLocationFilter = null;
-
             showDepartments();
         }
     });
@@ -417,12 +418,14 @@ function shouldShowDepartment(department) {
 
 // Show the list of locations -----------------------------------------------------
 
-function getLocations() {
+function getLocations(search) {
     $.ajax({
         url: 'libs/php/getAllLocations.php',
         type: 'GET',
         dataType: 'json',
-        data: {},
+        data: {
+            search: search // pass the search parameter
+        },
         success: function (result) {
             const locationsList = document.getElementById("locationsList");
             locationsList.innerHTML = "";
