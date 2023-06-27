@@ -1,1 +1,15 @@
+1. INTRODUCTION
+The purpose of this document is to define the user requirements for the "Company Directory" web application. The goal of this project is to develop a robust, user-friendly system that allows for effective management and retrieval of company personnel data, catering to both mobile and desktop users.
+2. PRODUCT DESCRIPTION
+ 2.1 SCOPE
+The Company Directory application is designed to be an internal tool for businesses to efficiently manage information about their employees, departments, and locations. The application will operate with a mobile-first design but must also ensure seamless functionality on desktop PCs.
+2.2 Functional Requirements
+Employee Management: The application will enable users to perform CRUD operations (Create, Read, Update, Delete) on employee records. Each record consists of employee data such as name, department, job role, contact information, and location.
+Department and Location Management: CRUD operations on department and location data, allowing for departments or locations to be added, modified, or removed as necessary.
+Multi-criteria Search: Users can perform searches using single or multiple criteria to find specific employees, departments, or locations. The search function should return results quickly and accurately.
+Data Validation and Error Handling: Implement stringent data validation to maintain the integrity of information entered into the database. The system
+should handle errors gracefully, providing users with clear messages in case of invalid data input or system issues.
 
+2.3 Interface Requirements
+Responsive User Interface: The UI will be clean and intuitive, designed to provide a seamless user experience across mobile and desktop devices. Navigation should be straightforward, with clear labels for all features and functions.
+Data Interface: The system will interact with a backend database using PHP with MySQL or MariaDB for data storage and retrieval. It will leverage AJAX for asynchronous data operations.
