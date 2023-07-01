@@ -29,7 +29,7 @@
     }
 
     // Check if there are people associated with the department
-    $query = $conn->prepare('SELECT COUNT(id) as peopleCount FROM personnel WHERE departmentID = ?');
+    $query = $conn->prepare('SELECT count(p.id) as departmentCount, d.name as departmentName FROM personnel p LEFT JOIN department d ON ( d.id = p.departmentID) WHERE d.id = ?');
     $query->bind_param("i", $_REQUEST['id']);
     $query->execute();
     $result = $query->get_result();
@@ -70,16 +70,40 @@
         exit;
     }
 
+    // Select count of personnel for the department
+    $selectQuery = $conn->prepare('SELECT COUNT(p.id) as departmentCount, d.name as departmentName FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) WHERE d.id = ?');
+    $selectQuery->bind_param("i", $_REQUEST['id']);
+    $selectQuery->execute();
+    $selectResult = $selectQuery->get_result();
+    $data = $selectResult->fetch_assoc();
+
+    // Check if the select query execution failed
+    if (!$selectResult) {
+        // Prepare the error response
+        $output['status']['code'] = "400";
+        $output['status']['name'] = "executed";
+        $output['status']['description'] = "select query failed";
+        $output['data'] = [];
+
+        // Close the database connection
+        $conn->close();
+
+        // Return the error response as JSON and stop further execution
+        echo json_encode($output);
+        exit;
+    }
+
     // Prepare the success response
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
     $output['status']['description'] = "success";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = [];
+    $output['data']['departmentCount'] = $data['departmentCount'];
+    $output['data']['departmentName'] = $data['departmentName'];
+    $output['data']['deletedDepartmentID'] = $_REQUEST['id'];
 
     // Close the database connection
     $conn->close();
 
     // Return the success response as JSON
     echo json_encode($output);
-?>

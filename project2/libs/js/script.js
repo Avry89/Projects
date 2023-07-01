@@ -1,7 +1,4 @@
-
-
 // Preloader
-
 window.addEventListener('load', function () {
     var preloader = document.querySelector('#preloader');
     if (preloader) {
@@ -12,6 +9,7 @@ window.addEventListener('load', function () {
     }
 });
 
+let activePage = "employeePage";
 
 // Show and hide pages -------------------------------------------------------------
 
@@ -28,6 +26,7 @@ function showPage(pageId, getDataFunc) {
     document.getElementById(pageId).style.display = "block";
 }
 
+
 function showEverything() {
     showPage("employeePage", getEmployees);
     showPage("departmentsPage", getDepartments);
@@ -41,35 +40,118 @@ function showAllLocations() {
     showPage("locationsPage", getLocations);
 }
 
+// Tab buttons: 
 
+// Add an event listener to each button to handle the click event
+document.getElementById("navEmployees").addEventListener("click", function () {
+    if (activePage !== "employeePage") {
+        activePage = "employeePage";
+        showPage(activePage, getEmployees);
+        selectButton("navEmployees"); // Highlight the active page button
+    }
+});
+
+document.getElementById("navDepartments").addEventListener("click", function () {
+    if (activePage !== "departmentsPage") {
+        activePage = "departmentsPage";
+        showPage(activePage, getDepartments);
+        selectButton("navDepartments"); // Highlight the active page button
+    }
+});
+
+document.getElementById("navLocations").addEventListener("click", function () {
+    if (activePage !== "locationsPage") {
+        activePage = "locationsPage";
+        showPage(activePage, getLocations);
+        selectButton("navLocations"); // Highlight the active page button
+    }
+});
+
+// Function to select the button and update the active class
+function selectButton(buttonId) {
+    // Remove the active class from all buttons
+    var buttons = document.getElementsByClassName("btn");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active");
+    }
+
+    // Add the active class to the selected button
+    var selectedButton = document.getElementById(buttonId);
+    selectedButton.classList.add("active");
+}
+
+// Add button --------------------------------------------------------------------
+
+// Add button event listener
+document.getElementById('addButton').addEventListener('click', function (event) {
+    event.preventDefault();
+
+    var activePageButtonId = '';
+    var modalId = '';
+
+    // Determine the active page button ID and modal ID based on the active page
+    switch (activePage) {
+        case 'employeePage':
+            activePageButtonId = 'navEmployees';
+            modalId = '#createEmployeeModal';
+            getDepartmentList(); // Populate department dropdown
+            break;
+        case 'departmentsPage':
+            activePageButtonId = 'navDepartments';
+            modalId = '#createDepartmentModal';
+            getLocationsList(); // Populate locations dropdown
+            break;
+        case 'locationsPage':
+            activePageButtonId = 'navLocations';
+            modalId = '#createLocationModal';
+            break;
+        default:
+            // No specific action for other pages
+            break;
+    }
+
+    // Set the data-id attribute of the button
+    this.setAttribute('data-id', activePageButtonId);
+
+    // Open the corresponding modal
+    $(modalId).modal('show');
+});
 
 // Show pages ----------------------------------------------------------------------
 
-function changeButtonContent() {
-    document.getElementById("createEmployeeButton").textContent = "Add employee";
-    document.getElementById("createDepartmentButton").textContent = "Add department";
-    document.getElementById("createLocationButton").textContent = "Add location";
+// Show pages ----------------------------------------------------------------------
+
+function showAllDepartments() {
+    showPage("departmentsPage", getDepartments);
 }
 
-$("#employeeEntry").on('click', function () {
-    getEmployees();
-    fillEmployeeProfile();
+document.getElementById("navEmployees").addEventListener("click", function () {
+    if (activePage !== "employeePage") {
+        activePage = "employeePage";
+        showPage(activePage, getEmployees);
+        selectButton("navEmployees"); // Highlight the active page button
+    }
 });
 
-$("#navEmployees").on('click', function () {
-    showEverything();
-    changeButtonContent();
+// Remove the duplicate event listener for "navDepartments" button
+document.getElementById("navDepartments").removeEventListener("click", showAllDepartments);
+
+document.getElementById("navDepartments").addEventListener("click", function () {
+    if (activePage !== "departmentsPage") {
+        activePage = "departmentsPage";
+        showPage(activePage, getDepartments);
+        selectButton("navDepartments"); // Highlight the active page button
+    }
 });
 
-$("#navDepartments").on('click', function () {
-    showAllDepartments();
-    changeButtonContent();
+document.getElementById("navLocations").addEventListener("click", function () {
+    if (activePage !== "locationsPage") {
+        activePage = "locationsPage";
+        showPage(activePage, getLocations);
+        selectButton("navLocations"); // Highlight the active page button
+    }
 });
 
-$("#navLocations").on('click', function () {
-    showAllLocations();
-    changeButtonContent();
-});
 
 
 
@@ -107,9 +189,7 @@ document.getElementById('formEmployee').addEventListener('submit', function (e) 
     $("#createEmployeeModal").modal("hide");
 });
 
-document.getElementById('createEmployeeButton').addEventListener('click', function () {
-    getDepartmentList();
-});
+
 
 document.getElementById('employeeEditForm').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -128,9 +208,7 @@ document.getElementById('formDepartment').addEventListener('submit', function (e
     $('#createDepartmentModal').modal('hide');
 });
 
-document.getElementById('createDepartmentButton').addEventListener('click', function () {
-    getLocationsList();
-});
+
 
 document.getElementById('departmentSaveButton').addEventListener('click', function () {
     updateDepartment();
@@ -205,10 +283,9 @@ getEmployees();
 getLocations();
 
 function searchAll() {
-    const search = document.getElementById("allSearch").value;
-    getEmployees(search);
-    getDepartments(search);
-    getLocations(search);
+    getEmployees();
+    getDepartments();
+    getLocations();
 
     document.getElementById("employeePage").style.display = "block";
     document.getElementById("departmentsPage").style.display = "block";
@@ -216,23 +293,24 @@ function searchAll() {
 }
 
 // 
-function getEmployees(search) {
+function getEmployees() {
     $.ajax({
         url: 'libs/php/getAll.php',
         type: 'GET',
         dataType: 'json',
-        data: {
-            search: search // Pass the search parameter
-        },
+        data: {},
         success: function (result) {
+
             document.getElementById("employeeList").innerHTML = "";
+
             allEmployees = result.data;
+
             currentDepartmentFilter = null;
+
             showAllEmployees();
         }
-    });
-}
-
+    })
+};
 
 // Get list of all employees, name, department  on load + sort on search -----------
 
@@ -300,7 +378,6 @@ function showAllEmployees() {
 
 
 
-
 // Show all employees in a department ----------------------------------------------
 
 function shouldShowEmployee(employee) {
@@ -320,17 +397,19 @@ function shouldShowEmployee(employee) {
 
 // Show the list of departments ----------------------------------------------------
 
-function getDepartments(search) {
+function getDepartments() {
     $.ajax({
         url: 'libs/php/getAllDepartments.php',
         type: 'GET',
         dataType: 'json',
-        data: {
-            search: search // Pass the search parameter
-        },
+        data: {},
         success: function (result) {
-            document.getElementById("departmentsList").innerHTML = "";
+            const departmentsList = document.getElementById("departmentsList");
+            departmentsList.innerHTML = "";
+
             allDepartments = result.data;
+            currentLocationFilter = null;
+
             showDepartments();
         }
     });
@@ -379,7 +458,7 @@ function showDepartments() {
             const numOfEmployees = this.closest("tr").querySelector(".numOfEmployees").innerText;
 
             if (parseInt(numOfEmployees) > 0) {
-                sweetAlert(`You cannot delete ${departmentName}. There are still employees in the department.`, {
+                sweetAlert(`There are ${numOfEmployees} employees in ${departmentName}. You cannot delete it.`, {
                     icon: "error",
                 });
             } else {
@@ -403,6 +482,7 @@ function showDepartments() {
             }
         });
     }
+
 }
 
 function shouldShowDepartment(department) {
@@ -418,14 +498,12 @@ function shouldShowDepartment(department) {
 
 // Show the list of locations -----------------------------------------------------
 
-function getLocations(search) {
+function getLocations() {
     $.ajax({
         url: 'libs/php/getAllLocations.php',
         type: 'GET',
         dataType: 'json',
-        data: {
-            search: search // pass the search parameter
-        },
+        data: {},
         success: function (result) {
             const locationsList = document.getElementById("locationsList");
             locationsList.innerHTML = "";
@@ -512,7 +590,21 @@ function shouldShowLocation(location) {
 // Show employee profile -----------------------------------------------------------
 
 
+
+$(document).on('click', '.employeeEditButton', function () {
+    var employeeId = $(this).data('id');
+    fillEmployeeProfile(employeeId);
+});
+
+$('#employeeProfileEditModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Get the button that triggered the modal
+    var employeeId = button.data('id');
+
+
+});
+
 function fillEmployeeProfile(employeeId) {
+    // Retrieve employee data using AJAX request
     $.ajax({
         url: 'libs/php/getPersonnelByID.php',
         type: 'GET',
@@ -522,27 +614,45 @@ function fillEmployeeProfile(employeeId) {
         },
         success: function (result) {
             const personnel = result.data.personnel[0];
-            document.getElementById("employeeName").innerText = `${personnel.firstName} ${personnel.lastName}`;
-            document.getElementById("employeeLocation").innerText = personnel.location;
-            document.getElementById("employeeEmail").innerText = personnel.email;
-            document.getElementById("employeeDepartment").innerText = personnel.department;
-            document.getElementById("employeeLocation").innerText = personnel.location;
-            document.getElementById("employeeJobTitle").innerText = personnel.jobTitle;
 
-            document.getElementById("employeeFirstNameEdit").value = personnel.firstName;
-            document.getElementById("employeeLastNameEdit").value = personnel.lastName;
-            document.getElementById("employeeEmailEdit").value = personnel.email;
-            document.getElementById("employeeJobTitleEdit").value = personnel.jobTitle;
+            $('#employeeID').val(personnel.id);
 
-            document.getElementById("employeeNameEdit").innerText = `Editing ${personnel.firstName} ${personnel.lastName}`;
+            // Update the employee profile fields with retrieved data
+            $('#employeeName').text(`${personnel.firstName} ${personnel.lastName}`);
+            $('#employeeLocation').text(personnel.location);
+            $('#employeeEmail').text(personnel.email);
+            $('#employeeDepartment').text(personnel.department);
+            $('#employeeLocation').text(personnel.location);
+            $('#employeeJobTitle').text(personnel.jobTitle);
 
+            // Set the input fields in the edit form with retrieved data
+            $('#employeeFirstNameEdit').val(personnel.firstName);
+            $('#employeeLastNameEdit').val(personnel.lastName);
+            $('#employeeEmailEdit').val(personnel.email);
+            $('#employeeJobTitleEdit').val(personnel.jobTitle);
+
+            // Set the modal title with the employee's name
+            $('#employeeNameEdit').text(`Editing ${personnel.firstName} ${personnel.lastName}`);
+
+            // Store the current employee's name and ID (if needed)
             currentEmployeeName = `${personnel.firstName} ${personnel.lastName}`;
             currentEmpID = personnel.id;
 
+            // Call a function to get the department list for editing (if needed)
             getDepartmentListEdit(personnel.departmentID);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            // Handle error if the AJAX request fails
+            console.error(errorThrown);
         },
     });
 }
+
+$('#employeeProfileEditModal').on('shown.bs.modal', function () {
+    // Set focus on the first name field
+    $('#employeeFirstNameEdit').focus();
+});
+
 
 
 // Delete employee from database ---------------------------------------------------
@@ -606,26 +716,47 @@ function createEmployee() {
 
 // Delete department, if there are no employees in it ------------------------------
 
-function deleteDepartment(departmentID, departmentName) {
+$('.departmentDeleteButton').click(function () {
+    var departmentID = $(this).data('id'); // Retrieve the data-id attribute value
+
+    deleteDepartment(departmentID);
+});
+
+function deleteDepartment(departmentID) {
     $.ajax({
         url: 'libs/php/deleteDepartmentByID.php',
         type: 'POST',
         dataType: 'json',
         data: {
-            id: departmentID,
+            id: departmentID
         },
-        success: function (result) {
-            if (result.status.name === "ok") {
+        success: function (response) {
+            if (response.status.code === '200') {
+                // Department deleted successfully
                 getDepartments();
-                sweetAlert(`You have successfully deleted ${departmentName}.`, {
+                sweetAlert(`You have successfully deleted the department.`, {
                     icon: "success",
                 });
+            } else if (response.status.code === '400') {
+                // Integrity error - employees associated with the department
+                var employeeCount = response.data.employeeCount;
+                var departmentName = response.data.departmentName;
+                sweetAlert(`There are ${employeeCount} employees in ${departmentName}; you cannot delete it.`, {
+                    icon: "error",
+                });
             } else {
-                sweetAlert(`There are still employees in ${departmentName}; you cannot delete it.`, {
+                // Handle other error cases if needed
+                sweetAlert('Error: Department deletion failed.', {
                     icon: "error",
                 });
             }
         },
+        error: function (xhr, status, error) {
+            // Handle the AJAX error
+            sweetAlert('AJAX request failed. Error: ' + error, {
+                icon: "error",
+            });
+        }
     });
 }
 
@@ -819,30 +950,30 @@ function updateEmployee() {
 
 function getLocationsListEdit(selectedLocationId) {
     $.ajax({
-      url: 'libs/php/getAllLocations.php',
-      type: 'POST',
-      dataType: 'json',
-      data: {},
-      success: function (result) {
-        const formLocationDropdownEdit = document.getElementById("formLocationDropdownEdit");
-  
-        formLocationDropdownEdit.innerHTML = "";
-  
-        const locations = result.data;
-        locations.sort();
-  
-        locations.forEach(function (item) {
-          const option = document.createElement("option");
-          option.value = item.id;
-          option.innerText = item.name;
-          formLocationDropdownEdit.appendChild(option);
-        });
-  
-        formLocationDropdownEdit.value = selectedLocationId;
-      },
+        url: 'libs/php/getAllLocations.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {},
+        success: function (result) {
+            const formLocationDropdownEdit = document.getElementById("formLocationDropdownEdit");
+
+            formLocationDropdownEdit.innerHTML = "";
+
+            const locations = result.data;
+            locations.sort();
+
+            locations.forEach(function (item) {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.innerText = item.name;
+                formLocationDropdownEdit.appendChild(option);
+            });
+
+            formLocationDropdownEdit.value = selectedLocationId;
+        },
     });
-  }
-  
+}
+
 
 // Update Department ---------------------------------------------------------------
 
@@ -850,41 +981,41 @@ function updateDepartment() {
     const departmentName = document.getElementById("departmentNameEdit").value;
     const locationID = document.getElementById("formLocationDropdownEdit").value;
     const departmentID = currentDepartmentID;
-  
+
     $.ajax({
-      url: 'libs/php/updateDepartmentByID.php',
-      type: 'POST',
-      dataType: 'json',
-      data: {
-        name: departmentName,
-        locationID: locationID,
-        id: departmentID,
-      },
-      success: function (results) {
-        getDepartments();
-      },
+        url: 'libs/php/updateDepartmentByID.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            name: departmentName,
+            locationID: locationID,
+            id: departmentID,
+        },
+        success: function (results) {
+            getDepartments();
+        },
     });
-  }
-  
+}
+
 
 // Update location -----------------------------------------------------------------
 
 function updateLocation() {
     const locationName = document.getElementById("locationNameEdit").value;
     const locationID = currentLocationID;
-  
+
     $.ajax({
-      url: 'libs/php/updateLocationByID.php',
-      type: 'POST',
-      dataType: 'json',
-      data: {
-        name: locationName,
-        id: locationID,
-      },
-      success: function (results) {
-        showAllLocations();
-      },
+        url: 'libs/php/updateLocationByID.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            name: locationName,
+            id: locationID,
+        },
+        success: function (results) {
+            showAllLocations();
+        },
     });
-  }
-  
+}
+
 

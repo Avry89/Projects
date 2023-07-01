@@ -60,9 +60,15 @@ body {
 
 /* Buttons */
 .btn {
-    border-radius: 20px;
+    
     font-weight: bold;
 }
+
+/* Custom highlight effect for the active button */
+.btn.active {
+    background-color: #fb7c41;
+    
+  }
 
 .btn-outline-primary {
     color: #fff;

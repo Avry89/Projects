@@ -42,13 +42,13 @@
         <div class="collapse navbar-collapse justify-content-center align-items-center" id="navbarContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a id="navEmployees" class="nav-link" href="#listOfEmp">Employees</a>
+              <a href="#" class="btn btn-primary active me-2" id="navEmployees">Employees</a>
             </li>
-            <li class="nav-item ">
-              <a id="navDepartments" class="nav-link" href="#departments">Departments</a>
+            <li class="nav-item">
+              <a href="#" class="btn btn-primary me-2" id="navDepartments">Departments</a>
             </li>
-            <li class="nav-item ">
-              <a id="navLocations" class="nav-link" href="#locations">Locations</a>
+            <li class="nav-item">
+              <a href="#" class="btn btn-primary me-2" id="navLocations">Locations</a>
             </li>
           </ul>
         </div>
@@ -63,6 +63,9 @@
 
 
       <form id="allSearchBar" class="d-flex justify-content-center align-items-center" role="search">
+        <button class="btn btn-outline-success me-2" id="addButton" data-id="">
+          <i class="fa-sharp fa-solid fa-plus"></i>
+        </button>
         <input id="allSearch" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
 
@@ -81,13 +84,8 @@
     <!-- Entire page -->
 
     <div id="employeePage">
-      <h2 class="text-center" id="employeesTitle">Employees</h2>
 
-      <!-- Add new employee button -->
-      <div class="text-center">
-        <button id="createEmployeeButton" type="button" class="btn btn-outline-primary m-2" data-bs-toggle="modal"
-          data-bs-target="#createEmployeeModal">Add employee</button>
-      </div>
+
 
       <!-- Create employee -->
 
@@ -180,8 +178,9 @@
               <td class="listJob"></td>
               <td class="listDepartment"></td>
               <td>
-                <div class="d-flex justify-content-center align-items-center">
-                  <button type="button" class="btn btn-outline-primary employeeEditButton">
+                <div class="d-flex justify-content-end align-items-center">
+                  <button type="button" class="btn btn-outline-primary employeeEditButton" data-bs-toggle="modal"
+                    data-bs-target="#employeeProfileEditModal" data-id="">
                     <i class="fas fa-pencil-alt"></i>
                   </button>
                   <button type="button" class="btn btn-outline-danger employeeDeleteButton">
@@ -241,64 +240,42 @@
 
     <div class="modal fade" id="employeeProfileEditModal" data-bs-backdrop="static" data-bs-keyboard="false"
       tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div id="employeeProfileEdit">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-secondary bg-gradient text-white">
+            <h5 class="modal-title" id="employeeNameEdit">Editing Employee</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
             <form action="" id="employeeEditForm">
-              <div class="modal-header bg-secondary text-white">
-                <h3 id="employeeNameEdit" class="modal-title"></h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <input type="hidden" id="employeeId">
+              <div class="mb-3 form-floating">
+                <input type="text" class="form-control" id="employeeFirstNameEdit" placeholder=" " required>
+                <label for="employeeFirstNameEdit">First Name</label>
               </div>
-              <div class="modal-body">
-                <div class="row g-3 align-items-center mb-3">
-                  <div class="col-4">
-                    <label for="employeeFirstNameEdit" class="col-form-label">First Name</label>
-                  </div>
-                  <div class="col-8">
-                    <input type="text" class="form-control" name="" id="employeeFirstNameEdit">
-                  </div>
-                </div>
-                <div class="row g-3 align-items-center mb-3">
-                  <div class="col-4">
-                    <label for="employeeLastNameEdit" class="col-form-label text-center">Last Name</label>
-                  </div>
-                  <div class="col-8">
-                    <input type="text" class="form-control" name="" id="employeeLastNameEdit">
-                  </div>
-                </div>
-                <div class="row g-3 align-items-center mb-3">
-                  <div class="col-4">
-                    <label for="formDepartmentDropdownEdit" class="col-form-label">Department</label>
-                  </div>
-                  <div class="col-8">
-                    <select class="form-select form-control" name="formDepartmentDropdownEdit"
-                      id="formDepartmentDropdownEdit">
-                      <option value="">Select department</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="row g-3 align-items-center mb-3">
-                  <div class="col-4">
-                    <label for="employeeEmailEdit" class="col-form-label">Email</label>
-                  </div>
-                  <div class="col-8">
-                    <input type="email" class="form-control" name="" id="employeeEmailEdit">
-                  </div>
-                </div>
-                <div class="row g-3 align-items-center mb-3">
-                  <div class="col-4">
-                    <label for="employeeJobTitleEdit" class="col-form-label">Job Title</label>
-                  </div>
-                  <div class="col-8">
-                    <input type="text" class="form-control" name="" id="employeeJobTitleEdit">
-                  </div>
-                </div>
+              <div class="mb-3 form-floating">
+                <input type="text" class="form-control" id="employeeLastNameEdit" placeholder=" " required>
+                <label for="employeeLastNameEdit">Last Name</label>
               </div>
-              <div class="modal-footer">
-                <input class="btn btn-outline-primary" type="submit" value="Submit">
-                <input class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button" value="Cancel">
+              <div class="mb-3 form-floating">
+                <select class="form-select" id="formDepartmentDropdownEdit" placeholder=" " required>
+                  <option value="">Select department</option>
+                </select>
+                <label for="formDepartmentDropdownEdit">Department</label>
+              </div>
+              <div class="mb-3 form-floating">
+                <input type="email" class="form-control" id="employeeEmailEdit" placeholder=" " required>
+                <label for="employeeEmailEdit">Email</label>
+              </div>
+              <div class="mb-3 form-floating">
+                <input type="text" class="form-control" id="employeeJobTitleEdit" placeholder=" ">
+                <label for="employeeJobTitleEdit">Job Title</label>
               </div>
             </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" form="employeeEditForm" class="btn btn-outline-primary">Submit</button>
+            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
@@ -306,15 +283,13 @@
 
 
 
+
     <!-- Departments page -->
     <div id="departmentsPage">
-      <h2 class="text-center">Departments</h2>
 
-      <!-- Button to add new department -->
-      <div class="text-center">
-        <button id="createDepartmentButton" type="button" class="btn btn-outline-primary m-2" data-bs-toggle="modal"
-          data-bs-target="#createDepartmentModal">Add department</button>
-      </div>
+
+
+
 
       <!-- Create department -->
 
@@ -375,7 +350,7 @@
             <td class="locationID hiddenDataCell"></td>
 
             <td>
-              <div class="d-flex justify-content-center align-items-center">
+              <div class="d-flex justify-content-end align-items-center">
                 <button type="button" class="btn btn-outline-primary departmentEditButton" data-bs-toggle="modal"
                   data-bs-target="#departmentEditModal">
                   <i class="fas fa-pencil-alt"></i></button>
@@ -435,13 +410,10 @@
 
     <!-- Locations page -->
     <div id="locationsPage">
-      <h2 class="text-center">Locations</h2>
 
-      <!-- Button to add new location -->
-      <div class="text-center">
-        <button id="createLocationButton" type="button" class="btn btn-outline-primary m-2" data-bs-toggle="modal"
-          data-bs-target="#createLocationModal">Add location</button>
-      </div>
+
+      
+
 
 
 
@@ -487,7 +459,7 @@
             <td class="numOfDepts hiddenDataCell"></td>
 
             <td class="buttons">
-              <div class="d-flex justify-content-center align-items-center">
+              <div class="d-flex justify-content-end align-items-center">
                 <button type="button" class="btn btn-outline-primary locationEditButton" data-bs-toggle="modal"
                   data-bs-target="#locationEditModal">
                   <i class="fas fa-pencil-alt"></i></button>
